@@ -1,5 +1,12 @@
 # generator-wasm-oci-rust [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-> Generate WASM modules that can be pushed to OCI registries
+
+Generate WASM modules that can be pushed to OCI registries, for example
+for use with [Krustlet](https://github.com/deislabs/krustlet).
+
+**This generator is currently work in progress.  You cannot yet install it using npm.**
+If you would like to try it, you can clone
+the repo and run `npm link` to hook it up to Yeoman so that you can run `yo wasm-oci-rust`.
+Or let us know so that we're motivated to get it ready for a proper release!
 
 ## Installation
 
@@ -16,17 +23,14 @@ Then generate your new project:
 yo wasm-oci-rust
 ```
 
-## Getting To Know Yeoman
+## Code of Conduct
 
- * Yeoman has a heart of gold.
- * Yeoman is a person with feelings and opinions, but is very easy to work with.
- * Yeoman can be too opinionated at times but is easily convinced not to be.
- * Feel free to [learn more about Yeoman](http://yeoman.io/).
+This project has adopted the [Microsoft Open Source Code of
+Conduct](https://opensource.microsoft.com/codeofconduct/).
 
-## License
-
-MIT © [itowlson]()
-
+For more information see the [Code of Conduct
+FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact
+[opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 [npm-image]: https://badge.fury.io/js/generator-wasm-oci-rust.svg
 [npm-url]: https://npmjs.org/package/generator-wasm-oci-rust
