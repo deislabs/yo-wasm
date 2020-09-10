@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "itowlson",
+      "authorEmail": "ivan.towlson@microsoft.com",
+      "authorUrl": ""
+    }
+  }
+}
