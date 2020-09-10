@@ -1,27 +1,24 @@
-'use strict';
-const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const yosay = require('yosay');
+"use strict";
+const Generator = require("yeoman-generator");
 
 const TEMPLATE_FILES = [
-  '.gitignore',
-  'Cargo.toml',
-  'LICENSE',
-  'README.md',
-  '.github/workflows/build.yml',
-  '.github/workflows/release.yml',
-  '.vscode/settings.json',
-  'src/main.rs'
+  ".gitignore",
+  "Cargo.toml",
+  "LICENSE",
+  "README.md",
+  ".github/workflows/build.yml",
+  ".github/workflows/release.yml",
+  ".vscode/settings.json",
+  "src/main.rs"
 ];
 
 module.exports = class extends Generator {
   prompting() {
-
     const prompts = [
       {
-        type: 'input',
-        name: 'moduleName',
-        message: 'What is the name of the WASM module?',
+        type: "input",
+        name: "moduleName",
+        message: "What is the name of the WASM module?",
         default: this.appname
       }
     ];
