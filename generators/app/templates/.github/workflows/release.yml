@@ -7,7 +7,7 @@ on:
       - "v*"
 
 env:
-  ACR_NAME: itowlsonacrwasm
+  ACR_NAME: <%= registryName %>
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
       with:
         name: <%= moduleName %>.wasm
         path: target/wasm32-wasi/release/<%= moduleName %>.wasm
-  
+
   publish:
     name: Push released module to OCI registry
     runs-on: ubuntu-latest
