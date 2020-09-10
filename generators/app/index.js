@@ -3,36 +3,42 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 
+const TEMPLATE_FILES = [
+  '.gitignore',
+  'Cargo.toml',
+  'LICENSE',
+  'README.md',
+  '.github/workflows/build.yml',
+  '.github/workflows/release.yml',
+  '.vscode/settings.json',
+  'src/main.rs'
+];
+
 module.exports = class extends Generator {
   prompting() {
-    // Have Yeoman greet the user.
-    this.log(
-      yosay(`Welcome to the luminous ${chalk.green('generator-wasm-oci-rust')} generator!`)
-    );
 
     const prompts = [
       {
-        type: 'confirm',
-        name: 'someAnswer',
-        message: 'Would you like to enable this option?',
-        default: true
+        type: 'input',
+        name: 'moduleName',
+        message: 'What is the name of the WASM module?',
+        default: this.appname
       }
     ];
 
-    return this.prompt(prompts).then(props => {
-      // To access props later use this.props.someAnswer;
-      this.props = props;
+    return this.prompt(prompts).then(answers => {
+      // To access answers later, use this.answers.*
+      this.answers = answers;
     });
   }
 
   writing() {
-    this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
-    );
-  }
-
-  install() {
-    this.installDependencies();
+    for (const path of TEMPLATE_FILES) {
+      this.fs.copyTpl(
+        this.templatePath(path),
+        this.destinationPath(path),
+        this.answers
+      );
+    }
   }
 };
