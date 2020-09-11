@@ -23,6 +23,33 @@ Then generate your new project:
 yo wasm-oci-rust
 ```
 
+## Usage
+
+The project contains a GitHub workflow (in `.github/workflows/release.yml`) that publishes
+your WASM module to an OCI registry.  At the moment, the Yeoman generator only sets
+this up for Azure Container Registry, but we'll expand this repertoire over time
+(and it should be reasonably easy to adapt the ACR steps to other registries).
+The publish workflow needs to know three things:
+
+* The name of the registry to publish to.  For ACR, this is set via the `ACR_NAME`
+  variable in `release.yml` (and _excludes_ the `.azurecr.io` suffix).  The generator
+  sets this up for you, but if you want to change the publish registry, this is where
+  to do it.
+* The credentials for pushing to the registry.  For ACR, this is the ID and password
+  of a service principal with push permission to the registry.  You can create such
+  a service principal using the script at https://bit.ly/2ZsmeQS, but you **MUST**
+  change the `az ad sp create --role` parameter to `acrpush`.  This will print an
+  ID and password.  Then follow the instructions at https://bit.ly/2ZqS3cB to create
+  GitHub secrets named `ACR_SP_ID` and `ACR_SP_PASSWORD`.  The release workflow
+  will use those secrets to push the WASM module to ACR.
+
+The `release.yml` workflow is set up to publish a build as `canary` whenever you
+push or merge a PR to your `main` branch, and to publish a versioned module
+whenever you create a tag whose name begins with `v` (e.g. `v1.1.0`).
+
+_NOTE: `release.yml` watches the `main` branch.  If your repository uses the name
+`master` then you must change this in the workflow file._
+
 ## Code of Conduct
 
 This project has adopted the [Microsoft Open Source Code of
