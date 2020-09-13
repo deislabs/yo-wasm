@@ -6,6 +6,9 @@ on:
     tags:
       - "v*"
 
+env:
+  ACR_NAME: <%= registryName %>
+
 jobs:
   build:
     name: Build release assets
@@ -61,10 +64,8 @@ jobs:
         name: <%= moduleName %>.wasm
         path: ./assets
 
-    # TODO: FILL IN THE << ... >> bit below
+    - name: Log into registry
+      run: az acr login -n ${ACR_NAME} -u ${{ secrets.ACR_SP_ID }} -p ${{ secrets.ACR_SP_PASSWORD }}
 
-    # - name: Log into registry
-    #   run: << your docker login equivalent here >>
-
-    # - name: Publish to registry
-    #   run: ./tools/wasm-to-oci push ./assets/<%= moduleName %>.wasm << your OCI reference here e.g. myname.myprovider.io/<%= moduleName %>:${RELEASE_VERSION} >>
+    - name: Publish to registry
+      run: ./tools/wasm-to-oci push ./assets/<%= moduleName %>.wasm ${ACR_NAME}.azurecr.io/<%= moduleName %>:${RELEASE_VERSION}
