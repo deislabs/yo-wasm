@@ -19,12 +19,6 @@
     "yeoman-test": "^1.7.0",
     "yeoman-assert": "^3.1.0",
     "eslint": "^6.6.0",
-    "prettier": "^1.19.1",
-    "husky": "^3.0.9",
-    "lint-staged": "^9.4.3",
-    "eslint-config-prettier": "^6.6.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-config-xo": "^0.27.2",
     "jest": "^26.1.0"
   },
   "engines": {
@@ -38,36 +32,14 @@
   "jest": {
     "testEnvironment": "node"
   },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.json": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "eslintConfig": {
-    "extends": [
-      "xo",
-      "prettier"
-    ],
+    "parserOptions": {
+      "ecmaVersion": 2015
+    },
     "env": {
       "jest": true,
       "node": true
-    },
-    "rules": {
-      "prettier/prettier": "error"
-    },
-    "plugins": [
-      "prettier"
-    ]
+    }
   },
   "scripts": {
     "pretest": "eslint .",
