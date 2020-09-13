@@ -56,9 +56,9 @@ module.exports = class extends Generator {
     }
   }
 
-  instructions() {
+  end() {
     this.log('');
-    this.log(chalk.green('Creating project and GitHub workflows...'));
+    this.log(chalk.green('Created project and GitHub workflows'));
     this.log('');
     this.log('The release workflow depends on one variable and two secrets:');
     this.log('');
