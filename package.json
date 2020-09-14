@@ -1,8 +1,8 @@
 {
-  "name": "generator-wasm-oci-rust",
+  "name": "generator-wasm-oci",
   "version": "0.0.1",
-  "description": "Publish Rust programs as WASM modules via OCI registries",
-  "homepage": "https://github.com/deislabs/generator-wasm-oci-rust",
+  "description": "Publish programs as WASM modules via OCI registries",
+  "homepage": "https://github.com/deislabs/generator-wasm-oci",
   "author": {
     "name": "itowlson",
     "email": "ivan.towlson@microsoft.com"
@@ -46,6 +46,6 @@
     "pretest": "eslint .",
     "test": "jest"
   },
-  "repository": "https://github.com/deislabs/generator-wasm-oci-rust",
+  "repository": "https://github.com/deislabs/generator-wasm-oci",
   "license": "MIT"
 }
