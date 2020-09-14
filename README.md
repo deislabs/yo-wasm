@@ -50,6 +50,10 @@ whenever you create a tag whose name begins with `v` (e.g. `v1.1.0`).
 _NOTE: `release.yml` watches the `main` branch.  If your repository uses the name
 `master` then you must change this in the workflow file._
 
+_NOTE: during testing we sometimes see that GitHub workflows do not run on the initial
+commit, or if you tag the initial commit. You may need to push a change to `main` before
+the workflows will run._
+
 ## Code of Conduct
 
 This project has adopted the [Microsoft Open Source Code of
