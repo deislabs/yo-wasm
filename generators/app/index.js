@@ -1,19 +1,12 @@
 'use strict';
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
+const fspath = require('path');
 
 const acr = require('./providers/acr');
 const defaultProvider = require('./providers/default');
 
-const TEMPLATE_FILES = [
-  '.gitignore',
-  'Cargo.toml',
-  'LICENSE',
-  'README.md',
-  '.github/workflows/build.yml',
-  '.vscode/settings.json',
-  'src/main.rs'
-];
+const rust = require('./languages/rust');
 
 module.exports = class extends Generator {
   async prompting() {
@@ -31,6 +24,15 @@ module.exports = class extends Generator {
         name: 'authorName',
         message: 'What is the name of the author?',
         default: username
+      },
+      {
+        type: 'list',
+        name: 'language',
+        message: 'What programming language will you write the module in?',
+        choices: [
+          'Rust'
+        ],
+        default: 'Rust'
       },
       {
         type: 'list',
@@ -53,9 +55,12 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    for (const path of TEMPLATE_FILES) {
+    const language = languageProvider(this.answers.language);
+    const templateFolder = language.templateFolder();
+
+    for (const path of language.templateFiles()) {
       this.fs.copyTpl(
-        this.templatePath(path),
+        this.templatePath(fspath.join(templateFolder, path)),
         this.destinationPath(path),
         this.answers
       );
@@ -63,7 +68,7 @@ module.exports = class extends Generator {
 
     const releaseTemplate = providerReleaseTemplate(this.answers.registryProvider);
     this.fs.copyTpl(
-      this.templatePath(`.github/workflows/${releaseTemplate}`),
+      this.templatePath(fspath.join(templateFolder, `.github/workflows/${releaseTemplate}`)),
       this.destinationPath(".github/workflows/release.yml"),
       this.answers
     );
@@ -86,6 +91,15 @@ function provider(registryProvider) {
       return acr;
     default:
       return defaultProvider;
+  }
+}
+
+function languageProvider(language) {
+  switch (language) {
+    case 'Rust':
+      return rust;
+    default:
+      throw new Error("You didn't choose a language");
   }
 }
 
