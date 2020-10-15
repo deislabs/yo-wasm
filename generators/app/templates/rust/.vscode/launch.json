@@ -8,7 +8,7 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "sourceLanguages": ["rust"],
-            "preLaunchTask": "cargo:build"
+            "preLaunchTask": "Cargo: Build Native"
         }
     ]
 }
