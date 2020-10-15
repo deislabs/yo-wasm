@@ -9,7 +9,10 @@ const rust = {
       'Cargo.toml',
       'LICENSE',
       'README.md',
+      '.vscode/extensions.json',
+      '.vscode/launch.json',
       '.vscode/settings.json',
+      '.vscode/tasks.json',
       'src/main.rs'
     ];
   }
