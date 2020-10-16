@@ -9,11 +9,11 @@
             "problemMatcher": ["$rustc"]
         },
         {
-          "label": "Cargo: Build WASM",
-          "type": "shell",
-          "command": "cargo",
-          "args": ["build", "--target", "wasm32-wasi"],
-          "problemMatcher": ["$rustc"]
-      }
-  ]
+            "label": "Cargo: Build WASM",
+            "type": "shell",
+            "command": "cargo",
+            "args": ["build", "--target", "wasm32-wasi"],
+            "problemMatcher": ["$rustc"]
+        }
+    ]
 }

@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Debug",
+            "name": "Debug Native",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/target/debug/${workspaceRootFolderName}",
@@ -9,6 +9,16 @@
             "cwd": "${workspaceFolder}",
             "sourceLanguages": ["rust"],
             "preLaunchTask": "Cargo: Build Native"
-        }
-    ]
+        },
+        {
+            "name": "Debug WASM",
+            "type": "lldb",
+            "request": "launch",
+            "program": "wasmtime",
+            "args": ["run", "${workspaceFolder}/target/wasm32-wasi/debug/${workspaceRootFolderName}.wasm", "-g"],
+            "cwd": "${workspaceFolder}",
+            "sourceLanguages": ["rust"],
+            "preLaunchTask": "Cargo: Build WASM"
+      }
+  ]
 }
