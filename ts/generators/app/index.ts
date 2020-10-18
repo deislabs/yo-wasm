@@ -3,10 +3,10 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const fspath = require('path');
 
-const acr = require('./providers/acr');
-const defaultProvider = require('./providers/default');
+import * as acr from './providers/acr';
+import * as defaultProvider from './providers/default';
 
-const rust = require('./languages/rust');
+import * as rust from './languages/rust';
 
 module.exports = class extends Generator {
   async prompting() {
@@ -91,7 +91,7 @@ module.exports = class extends Generator {
   }
 };
 
-function provider(registryProvider) {
+function provider(registryProvider: string): any {
   switch (registryProvider) {
     case 'Azure Container Registry':
       return acr;
@@ -100,7 +100,7 @@ function provider(registryProvider) {
   }
 }
 
-function languageProvider(language) {
+function languageProvider(language: string): any {
   switch (language) {
     case 'Rust':
       return rust;
@@ -109,14 +109,14 @@ function languageProvider(language) {
   }
 }
 
-function providerSpecificPrompts(answers) {
+function providerSpecificPrompts(answers: any): any {
   return provider(answers.registryProvider).prompts(answers);
 }
 
-function providerSpecificInstructions(answers) {
+function providerSpecificInstructions(answers: any): any {
   return provider(answers.registryProvider).instructions(answers);
 }
 
-function providerReleaseTemplate(registryProvider) {
+function providerReleaseTemplate(registryProvider: string): string {
   return provider(registryProvider).releaseTemplate();
 }

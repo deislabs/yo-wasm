@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "moduleResolution": "node",
+        "lib": [
+            "es6"
+        ],
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "outDir": ".",
+        "rootDir": "./ts",
+        "declaration": true,
+        "strict": true,
+        "alwaysStrict": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitAny": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "noImplicitThis": true
+    },
+    "exclude": [
+        "generators",
+        "node_modules",
+        ".vscode-test"
+    ]
+}
