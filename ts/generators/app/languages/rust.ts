@@ -1,17 +1,21 @@
-export function  templateFolder(): string {
-  return 'rust';
-}
+import { Language } from './language';
 
-export function templateFiles(): string[] {
-  return [
-    '.gitignore',
-    'Cargo.toml',
-    'LICENSE',
-    'README.md',
-    '.vscode/extensions.json',
-    '.vscode/launch.json',
-    '.vscode/settings.json',
-    '.vscode/tasks.json',
-  'src/main.rs'
-  ];
+export const rust: Language = {
+  templateFolder(): string {
+    return 'rust';
+  },
+
+  templateFiles(): string[] {
+    return [
+      '.gitignore',
+      'Cargo.toml',
+      'LICENSE',
+      'README.md',
+      '.vscode/extensions.json',
+      '.vscode/launch.json',
+      '.vscode/settings.json',
+      '.vscode/tasks.json',
+    'src/main.rs'
+    ];
+  }
 }

@@ -6,7 +6,8 @@ const fspath = require('path');
 import * as acr from './providers/acr';
 import * as defaultProvider from './providers/default';
 
-import * as rust from './languages/rust';
+import { rust } from './languages/rust';
+import { Language } from './languages/language';
 
 module.exports = class extends Generator {
   async prompting() {
@@ -100,7 +101,7 @@ function provider(registryProvider: string): any {
   }
 }
 
-function languageProvider(language: string): any {
+function languageProvider(language: string): Language {
   switch (language) {
     case 'Rust':
       return rust;
