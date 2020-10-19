@@ -11,6 +11,14 @@ import { rust } from './languages/rust';
 import { Language } from './languages/language';
 
 module.exports = class extends Generator {
+  constructor(args: any, options: any) {
+    super(args, options);
+    // NOTE: at run time, __dirname will end up referring to the JavaScript output
+    // directory, NOT the TypeScript source directory. That's why this relative path
+    // looks a bit hinky!
+    this.sourceRoot(fspath.join(__dirname, '../../templates'));
+  }
+
   async prompting() {
     const username = this.user.git.name() || process.env.USER || process.env.USERNAME;
 

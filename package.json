@@ -8,7 +8,8 @@
     "email": "ivan.towlson@microsoft.com"
   },
   "files": [
-    "generators"
+    "generators",
+    "templates"
   ],
   "main": "generators/index.js",
   "keywords": [
