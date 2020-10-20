@@ -1,7 +1,6 @@
-'use strict';
-const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const fspath = require('path');
+import Generator = require('yeoman-generator');
+import { default as chalk } from 'chalk';
+import * as fspath from 'path';
 
 import { Registry } from './providers/registry';
 import { acr } from './providers/acr';
@@ -11,7 +10,9 @@ import { rust } from './languages/rust';
 import { Language } from './languages/language';
 
 module.exports = class extends Generator {
-  constructor(args: any, options: any) {
+  private answers: any = undefined;
+
+  constructor(args: string | string[], options: Generator.GeneratorOptions) {
     super(args, options);
     // NOTE: at run time, __dirname will end up referring to the JavaScript output
     // directory, NOT the TypeScript source directory. That's why this relative path
@@ -22,7 +23,7 @@ module.exports = class extends Generator {
   async prompting() {
     const username = this.user.git.name() || process.env.USER || process.env.USERNAME;
 
-    const prompts = [
+    const prompts: Generator.Questions<any> = [
       {
         type: 'input',
         name: 'moduleName',

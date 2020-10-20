@@ -1,11 +1,10 @@
-'use strict';
+import Generator = require('yeoman-generator');
+import { default as chalk } from 'chalk';
 
 import { Registry } from "./registry";
 
-const chalk = require('chalk');
-
 export const acr: Registry = {
-  prompts(answers: any): any {
+  prompts(answers: any): Generator.Questions<any> {
     return [
       {
         type: 'input',
@@ -16,7 +15,7 @@ export const acr: Registry = {
     ];
   },
 
-  instructions(): any {
+  instructions(): ReadonlyArray<string> {
     return [
       'The release workflow depends on one variable and two secrets:',
       '',

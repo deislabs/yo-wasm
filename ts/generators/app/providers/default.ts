@@ -1,5 +1,7 @@
+import Generator = require('yeoman-generator');
+
 export const defaultRegistry = {
-  prompts(): any { return []; },
-  instructions(): any { return []; },
+  prompts(): Generator.Questions<any> { return []; },
+  instructions(): ReadonlyArray<string> { return []; },
   releaseTemplate(): string { return 'release.yml'; }
 }
