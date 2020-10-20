@@ -5,7 +5,7 @@ for use with [Krustlet](https://github.com/deislabs/krustlet).
 
 **This generator is currently work in progress.  You cannot yet install it using npm.**
 If you would like to try it, you can clone
-the repo and run `npm link` to hook it up to Yeoman so that you can run `yo wasm-oci`.
+the repo and run `npm run compile && npm link` to hook it up to Yeoman so that you can run `yo wasm-oci`.
 Or let us know so that we're motivated to get it ready for a proper release!
 
 ## Installation
