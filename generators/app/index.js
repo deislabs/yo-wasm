@@ -72,6 +72,12 @@ module.exports = class extends Generator {
       this.destinationPath(".github/workflows/release.yml"),
       this.answers
     );
+
+    // It would be good to install the language toolchain (and other local tools) here,
+    // and also to set up appropriate VS Code settings files etc.  But the install is
+    // something we'd like to be able to run on other boxes (when the generated project
+    // is cloned) so this needs to be a script that we emit not just something we
+    // do during generation.
   }
 
   end() {
