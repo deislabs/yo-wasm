@@ -15,7 +15,7 @@ export const rust: Language = {
       '.vscode/launch.json',
       '.vscode/settings.json',
       '.vscode/tasks.json',
-    'src/main.rs'
+      'src/main.rs'
     ];
   }
 }
