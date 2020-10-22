@@ -1,18 +1,29 @@
-'use strict';
-const Generator = require('yeoman-generator');
-const chalk = require('chalk');
-const fspath = require('path');
+import Generator = require('yeoman-generator');
+import { default as chalk } from 'chalk';
+import * as fspath from 'path';
 
-const acr = require('./providers/acr');
-const defaultProvider = require('./providers/default');
+import { Registry } from './providers/registry';
+import { acr } from './providers/acr';
+import { defaultRegistry } from './providers/default';
 
-const rust = require('./languages/rust');
+import { rust } from './languages/rust';
+import { Language } from './languages/language';
 
 module.exports = class extends Generator {
+  private answers: any = undefined;
+
+  constructor(args: string | string[], options: Generator.GeneratorOptions) {
+    super(args, options);
+    // NOTE: at run time, __dirname will end up referring to the JavaScript output
+    // directory, NOT the TypeScript source directory. That's why this relative path
+    // looks a bit hinky!
+    this.sourceRoot(fspath.join(__dirname, '../../templates'));
+  }
+
   async prompting() {
     const username = this.user.git.name() || process.env.USER || process.env.USERNAME;
 
-    const prompts = [
+    const prompts: Generator.Questions<any> = [
       {
         type: 'input',
         name: 'moduleName',
@@ -91,16 +102,16 @@ module.exports = class extends Generator {
   }
 };
 
-function provider(registryProvider) {
+function provider(registryProvider: string): Registry {
   switch (registryProvider) {
     case 'Azure Container Registry':
       return acr;
     default:
-      return defaultProvider;
+      return defaultRegistry;
   }
 }
 
-function languageProvider(language) {
+function languageProvider(language: string): Language {
   switch (language) {
     case 'Rust':
       return rust;
@@ -109,14 +120,14 @@ function languageProvider(language) {
   }
 }
 
-function providerSpecificPrompts(answers) {
+function providerSpecificPrompts(answers: any): any {
   return provider(answers.registryProvider).prompts(answers);
 }
 
-function providerSpecificInstructions(answers) {
+function providerSpecificInstructions(answers: any): ReadonlyArray<string> {
   return provider(answers.registryProvider).instructions(answers);
 }
 
-function providerReleaseTemplate(registryProvider) {
+function providerReleaseTemplate(registryProvider: string): string {
   return provider(registryProvider).releaseTemplate();
 }

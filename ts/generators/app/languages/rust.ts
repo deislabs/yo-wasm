@@ -1,9 +1,11 @@
-const rust = {
-  templateFolder() {
+import { Language } from './language';
+
+export const rust: Language = {
+  templateFolder(): string {
     return 'rust';
   },
 
-  templateFiles() {
+  templateFiles(): string[] {
     return [
       '.gitignore',
       'Cargo.toml',
@@ -17,5 +19,3 @@ const rust = {
     ];
   }
 }
-
-module.exports = rust;

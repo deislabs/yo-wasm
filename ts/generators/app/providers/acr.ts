@@ -1,8 +1,10 @@
-'use strict';
-const chalk = require('chalk');
+import Generator = require('yeoman-generator');
+import { default as chalk } from 'chalk';
 
-const acr = {
-  prompts(answers) {
+import { Registry } from "./registry";
+
+export const acr: Registry = {
+  prompts(answers: any): Generator.Questions<any> {
     return [
       {
         type: 'input',
@@ -13,7 +15,7 @@ const acr = {
     ];
   },
 
-  instructions() {
+  instructions(): ReadonlyArray<string> {
     return [
       'The release workflow depends on one variable and two secrets:',
       '',
@@ -31,9 +33,7 @@ const acr = {
     ];
   },
 
-  releaseTemplate() {
+  releaseTemplate(): string {
     return 'release.azurecr.yml';
   }
 }
-
-module.exports = acr;
