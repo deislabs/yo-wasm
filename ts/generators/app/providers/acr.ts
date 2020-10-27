@@ -28,7 +28,7 @@ export const acr: Registry = {
       '  password of the service principal identified in ACR_SP_ID.',
       '',
       'See https://bit.ly/2ZsmeQS for creating a service principal',
-      'for use with ACR, and https://bit.ly/2ZqS3cB for creating the.',
+      'for use with ACR, and https://bit.ly/2ZqS3cB for creating the',
       'secrets in your GitHub repository.',
     ];
   },
