@@ -77,6 +77,13 @@ module.exports = class extends Generator {
       );
     }
 
+    const buildTemplate = 'build.yml';
+    this.fs.copyTpl(
+      this.templatePath(fspath.join(templateFolder, `.github/workflows/${buildTemplate}`)),
+      this.destinationPath(".github/workflows/build.yml"),
+      this.answers
+    );
+
     const releaseTemplate = providerReleaseTemplate(this.answers.registryProvider);
     this.fs.copyTpl(
       this.templatePath(fspath.join(templateFolder, `.github/workflows/${releaseTemplate}`)),
