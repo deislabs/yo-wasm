@@ -6,8 +6,9 @@ import { Registry } from './providers/registry';
 import { acr } from './providers/acr';
 import { defaultRegistry } from './providers/default';
 
-import { rust } from './languages/rust';
 import { Language } from './languages/language';
+import { rust } from './languages/rust';
+import { clang } from './languages/c';
 
 module.exports = class extends Generator {
   private answers: any = undefined;
@@ -41,7 +42,8 @@ module.exports = class extends Generator {
         name: 'language',
         message: 'What programming language will you write the module in?',
         choices: [
-          'Rust'
+          'Rust',
+          'C'
         ],
         default: 'Rust'
       },
@@ -122,6 +124,8 @@ function languageProvider(language: string): Language {
   switch (language) {
     case 'Rust':
       return rust;
+    case 'C':
+      return clang;
     default:
       throw new Error("You didn't choose a language");
   }
