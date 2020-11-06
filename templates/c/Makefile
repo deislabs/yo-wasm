@@ -1,0 +1,10 @@
+# TODO: Fix wasi-sdk path
+WASI_SDK = ~/wasi-sdk/wasi-sdk-11.0
+CC = $(WASI_SDK)/bin/clang
+SYSROOT = $(WASI_SDK)/share/wasi-sysroot/
+
+TARGET ?= main.wasm
+SRC_DIR ?= ./src
+
+main:
+	$(CC) $(SRC_DIR)/main.c -o $(TARGET) --sysroot $(SYSROOT)
