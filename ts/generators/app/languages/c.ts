@@ -7,15 +7,15 @@ export const clang: Language = {
 
   templateFiles(): string[] {
     return [
-      // '.gitignore',
-      // 'Cargo.toml',
-      // 'LICENSE',
-      // 'README.md',
+      '.gitignore',
+      'LICENSE',
+      'Makefile',
+      'README.md',
       // '.vscode/extensions.json',
       // '.vscode/launch.json',
       // '.vscode/settings.json',
       // '.vscode/tasks.json',
-      // 'src/main.rs'
+      'src/main.c'
     ];
   }
 }
