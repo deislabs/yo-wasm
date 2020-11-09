@@ -108,6 +108,10 @@ module.exports = class extends Generator {
       this.log(instruction);
     }
     this.log('');
+    for (const instruction of languageSpecificInstructions(this.answers)) {
+      this.log(instruction);
+    }
+    this.log('');
   }
 };
 
@@ -141,4 +145,8 @@ function providerSpecificInstructions(answers: any): ReadonlyArray<string> {
 
 function providerReleaseTemplate(registryProvider: string): string {
   return provider(registryProvider).releaseTemplate();
+}
+
+function languageSpecificInstructions(answers: any): ReadonlyArray<string> {
+  return languageProvider(answers.language).instructions();
 }
