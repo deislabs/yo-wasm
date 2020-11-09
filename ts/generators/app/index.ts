@@ -6,8 +6,9 @@ import { Registry } from './providers/registry';
 import { acr } from './providers/acr';
 import { defaultRegistry } from './providers/default';
 
-import { rust } from './languages/rust';
 import { Language } from './languages/language';
+import { rust } from './languages/rust';
+import { clang } from './languages/c';
 
 module.exports = class extends Generator {
   private answers: any = undefined;
@@ -41,7 +42,8 @@ module.exports = class extends Generator {
         name: 'language',
         message: 'What programming language will you write the module in?',
         choices: [
-          'Rust'
+          'Rust',
+          'C'
         ],
         default: 'Rust'
       },
@@ -77,6 +79,13 @@ module.exports = class extends Generator {
       );
     }
 
+    const buildTemplate = 'build.yml';
+    this.fs.copyTpl(
+      this.templatePath(fspath.join(templateFolder, `.github/workflows/${buildTemplate}`)),
+      this.destinationPath(".github/workflows/build.yml"),
+      this.answers
+    );
+
     const releaseTemplate = providerReleaseTemplate(this.answers.registryProvider);
     this.fs.copyTpl(
       this.templatePath(fspath.join(templateFolder, `.github/workflows/${releaseTemplate}`)),
@@ -99,6 +108,10 @@ module.exports = class extends Generator {
       this.log(instruction);
     }
     this.log('');
+    for (const instruction of languageSpecificInstructions(this.answers)) {
+      this.log(instruction);
+    }
+    this.log('');
   }
 };
 
@@ -115,6 +128,8 @@ function languageProvider(language: string): Language {
   switch (language) {
     case 'Rust':
       return rust;
+    case 'C':
+      return clang;
     default:
       throw new Error("You didn't choose a language");
   }
@@ -130,4 +145,8 @@ function providerSpecificInstructions(answers: any): ReadonlyArray<string> {
 
 function providerReleaseTemplate(registryProvider: string): string {
   return provider(registryProvider).releaseTemplate();
+}
+
+function languageSpecificInstructions(answers: any): ReadonlyArray<string> {
+  return languageProvider(answers.language).instructions();
 }
