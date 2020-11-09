@@ -11,10 +11,9 @@ export const clang: Language = {
       'LICENSE',
       'Makefile',
       'README.md',
-      // '.vscode/extensions.json',
-      // '.vscode/launch.json',
-      // '.vscode/settings.json',
-      // '.vscode/tasks.json',
+      '.vscode/extensions.json',
+      '.vscode/launch.json',
+      '.vscode/tasks.json',
       'src/main.c'
     ];
   }
