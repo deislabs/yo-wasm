@@ -25,6 +25,7 @@
     "exclude": [
         "generators",
         "node_modules",
+        "templates",
         ".vscode-test"
     ]
 }

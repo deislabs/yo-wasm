@@ -9,6 +9,7 @@ import { defaultRegistry } from './providers/default';
 import { Language } from './languages/language';
 import { rust } from './languages/rust';
 import { clang } from './languages/c';
+import { assemblyScript } from './languages/assembly-script';
 
 module.exports = class extends Generator {
   private answers: any = undefined;
@@ -43,6 +44,7 @@ module.exports = class extends Generator {
         message: 'What programming language will you write the module in?',
         choices: [
           'Rust',
+          'AssemblyScript',
           'C'
         ],
         default: 'Rust'
@@ -128,6 +130,8 @@ function languageProvider(language: string): Language {
   switch (language) {
     case 'Rust':
       return rust;
+    case 'AssemblyScript':
+      return assemblyScript;
     case 'C':
       return clang;
     default:
