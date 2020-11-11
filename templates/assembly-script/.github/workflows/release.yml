@@ -1,0 +1,70 @@
+name: release
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    name: Build release assets
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Rust bits
+      run: rustup target add wasm32-wasi
+
+    - name: Set the release version (tag)
+      if: startsWith(github.ref, 'refs/tags/v')
+      shell: bash
+      run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Set the release version (main)
+      if: github.ref == 'refs/heads/main'
+      shell: bash
+      run: echo ::set-env name=RELEASE_VERSION::canary
+
+    - name: Build release
+      run: cargo build --verbose --target wasm32-wasi --release
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: <%= moduleName %>.wasm
+        path: target/wasm32-wasi/release/<%= moduleName %>.wasm
+
+  publish:
+    name: Push released module to OCI registry
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+    - name: Install wasm-to-oci
+      run: |
+        mkdir tools
+        wget https://github.com/engineerd/wasm-to-oci/releases/download/v0.1.1/linux-amd64-wasm-to-oci -q -O ./tools/wasm-to-oci
+        chmod +x ./tools/wasm-to-oci
+
+    - name: Set the release version
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Set the release version
+      if: github.ref == 'refs/heads/main'
+      run: echo ::set-env name=RELEASE_VERSION::canary
+
+    - name: Download release assets
+      uses: actions/download-artifact@v1
+      with:
+        name: <%= moduleName %>.wasm
+        path: ./assets
+
+    # TODO: FILL IN THE << ... >> bit below
+
+    # - name: Log into registry
+    #   run: << your docker login equivalent here >>
+
+    # - name: Publish to registry
+    #   run: ./tools/wasm-to-oci push ./assets/<%= moduleName %>.wasm << your OCI reference here e.g. myname.myprovider.io/<%= moduleName %>:${RELEASE_VERSION} >>
