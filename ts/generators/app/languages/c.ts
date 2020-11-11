@@ -1,4 +1,8 @@
+import * as path from 'path';
+import mkdirp = require('mkdirp');
+
 import { Language } from './language';
+import { Errorable } from '../utils/errorable';
 
 export const clang: Language = {
   // TODO: better still help with setup, instead of just giving a bald message
@@ -27,5 +31,21 @@ export const clang: Language = {
       '.vscode/tasks.json',
       'src/main.c'
     ];
+  },
+
+  async installTools(projectDir: string): Promise<Errorable<null>> {
+    const toolsDir = path.join(projectDir, '.tools');
+    try {
+      await mkdirp(toolsDir);
+    } catch (e) {
+      return { succeeded: false, error: [`${e}`] };
+    }
+
+    const tarPath = path.join(toolsDir, 'wasi-sdk.tar.gz');
+    // Need to run:
+    // wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${major}/wasi-sdk-${major}.${minor}-${os}.tar.gz -O ${tarPath}
+    // tar xvf ${tarPath} -C ${toolsDir}
+    // TODO: there are also Mac packages
+    // TODO: handle Windows gracefully
   }
 }
