@@ -10,11 +10,15 @@ Or let us know so that we're motivated to get it ready for a proper release!
 
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and generator-wasm-oci using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install [Yeoman](http://yeoman.io) using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+
+**NOTE: You can't install `generator-wasm-oci` using `npm install` yet - for now you need to run `npm run compile && npm link` as described above.**  ~~Then install `generator-wasm-oci` also using `npm`.~~
 
 ```bash
 npm install -g yo
-npm install -g generator-wasm-oci
+# npm install -g generator-wasm-oci
+# for now do instead:
+npm run compile && npm link
 ```
 
 Then generate your new project:
@@ -23,11 +27,39 @@ Then generate your new project:
 yo wasm-oci
 ```
 
-## Usage
+## Setting up a project
 
-The project contains a GitHub workflow (in `.github/workflows/release.yml`) that publishes
-your WASM module to an OCI registry.  At the moment, the Yeoman generator only sets
-this up for Azure Container Registry, but we'll expand this repertoire over time
+After you run the generator, it displays any language-specific instructions
+to get started - for examples, tools you need to have installed. The generated
+`README.md` may also contain information on compiling or running the project.
+
+## Working on the generated project
+
+The generated projects contain configuration files for Visual Studio Code to help
+with the process of editing and testing.  You should be able to load a
+generated project into VS Code and have it:
+
+* Prompt you to install recommended extensions (don't just ignore these -
+  they may be needed for debugging!)
+* Provide a `Build WASM` task (available via the `Run Task` command)
+* Provide a `Debug WASM` debug configuration (available via the Run pane)
+
+_NOTE: These are not yet provided for the AssemblyScript template._
+
+## Publishing a project
+
+The project contains a GitHub action (in `.github/workflows/release.yml`) that publishes
+your WASM module to an OCI registry.
+
+* It publishes a `canary` version whenever you push to `main`.
+* It publishes a versioned module whenever you create a tag from `main`
+  whose name begins with `v` (e.g. `v1.1.0`).
+
+_NOTE: `release.yml` watches the `main` branch.  If your repository uses the name
+`master` then you must change this in the workflow file._
+
+At the moment, the Yeoman generator only sets up publishing for
+Azure Container Registry, but we'll expand this repertoire over time
 (and it should be reasonably easy to adapt the ACR steps to other registries).
 The publish workflow needs to know three things:
 
@@ -43,16 +75,9 @@ The publish workflow needs to know three things:
   GitHub secrets named `ACR_SP_ID` and `ACR_SP_PASSWORD`.  The release workflow
   will use those secrets to push the WASM module to ACR.
 
-The `release.yml` workflow is set up to publish a build as `canary` whenever you
-push or merge a PR to your `main` branch, and to publish a versioned module
-whenever you create a tag whose name begins with `v` (e.g. `v1.1.0`).
-
-_NOTE: `release.yml` watches the `main` branch.  If your repository uses the name
-`master` then you must change this in the workflow file._
-
 _NOTE: during testing we sometimes see that GitHub workflows do not run on the initial
-commit, or if you tag the initial commit. You may need to push a change to `main` before
-the workflows will run._
+commit, or if you tag the initial commit. It usually works - but you **may** need to
+push a change to `main` before the workflows will run._
 
 ## Code of Conduct
 
