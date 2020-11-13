@@ -18,7 +18,7 @@ First, install [Yeoman](http://yeoman.io) using [npm](https://www.npmjs.com/) (w
 npm install -g yo
 # npm install -g generator-wasm-oci
 # for now do instead:
-npm run compile && npm link
+npm install && npm run compile && npm link
 ```
 
 Then generate your new project:
