@@ -23,8 +23,10 @@ npm install && npm run compile && npm link
 
 Then generate your new project:
 
-```bash
-yo wasm-oci
+```console
+$ mkdir myproject
+$ cd myproject
+$ yo wasm-oci
 ```
 
 ## Setting up a project
