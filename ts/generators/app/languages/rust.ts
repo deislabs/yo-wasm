@@ -23,6 +23,7 @@ export const rust: Language = {
       'Cargo.toml',
       'LICENSE',
       'README.md',
+      '.cargo/config.toml',
       '.vscode/extensions.json',
       '.vscode/launch.json',
       '.vscode/settings.json',
