@@ -2,7 +2,8 @@ import * as path from 'path';
 import mkdirp = require('mkdirp');
 
 import { Language } from './language';
-import { Errorable } from '../utils/errorable';
+import { Errorable, failed } from '../utils/errorable';
+import { Platform, shell } from '../utils/shell';
 
 export const clang: Language = {
   // TODO: better still help with setup, instead of just giving a bald message
@@ -33,6 +34,14 @@ export const clang: Language = {
     ];
   },
 
+  async offerToInstallTools(): Promise<string | undefined> {
+    const platform = shell.platform();
+    if (platform === Platform.Linux || platform === Platform.MacOS) {
+      return "WASI SDK";
+    }
+    return undefined;
+  },
+
   async installTools(projectDir: string): Promise<Errorable<null>> {
     const toolsDir = path.join(projectDir, '.tools');
     try {
@@ -41,11 +50,37 @@ export const clang: Language = {
       return { succeeded: false, error: [`${e}`] };
     }
 
-    const tarPath = path.join(toolsDir, 'wasi-sdk.tar.gz');
+    const platform = shell.platform();
+    if (platform !== Platform.Linux && platform !== Platform.MacOS) {
+      return { succeeded: false, error: ['WASI SDK is not available for your operating system'] };
+    }
+
+    // WASI SDK version
+    const major = 11;
+    const minor = 0;
+    const os = platform === Platform.Linux ? 'linux' : 'macos';
+
     // Need to run:
     // wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${major}/wasi-sdk-${major}.${minor}-${os}.tar.gz -O ${tarPath}
     // tar xvf ${tarPath} -C ${toolsDir}
-    // TODO: there are also Mac packages
-    // TODO: handle Windows gracefully
+
+    const tarPath = path.join(toolsDir, 'wasi-sdk.tar.gz');
+    const wgetsr = await shell.exec(`wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${major}/wasi-sdk-${major}.${minor}-${os}.tar.gz -O ${tarPath}`);
+
+    if (failed(wgetsr)) {
+      return wgetsr;
+    } else if (wgetsr.result.code !== 0) {
+      return { succeeded: false, error: [`Error downloading WASI SDK: ${wgetsr.result.stderr}`] };
+    }
+
+    const tarsr = await shell.exec(`tar xvf ${tarPath} -C ${toolsDir}`);
+
+    if (failed(tarsr)) {
+      return tarsr;
+    } else if (tarsr.result.code !== 0) {
+      return { succeeded: false, error: [`Error downloading WASI SDK: ${wgetsr.result.stderr}`] };
+    }
+
+    return { succeeded: true, result: null };
   }
 }
