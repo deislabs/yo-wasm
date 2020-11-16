@@ -34,5 +34,9 @@ export const assemblyScript: Language = {
 
   async installTools(_projectDir: string): Promise<Errorable<null>> {
     return { succeeded: true, result: null };
+  },
+
+  augment(answers: any): any {
+    return answers;
   }
 }

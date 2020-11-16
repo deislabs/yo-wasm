@@ -1,5 +1,5 @@
 # TODO: Fix wasi-sdk path
-WASI_SDK ?= ~/wasi-sdk/wasi-sdk-11.0
+WASI_SDK ?= <%= wasiSdkPath %>
 CC = $(WASI_SDK)/bin/clang
 DEBUG_OPT = -glldb
 SYSROOT = $(WASI_SDK)/share/wasi-sysroot/

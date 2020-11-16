@@ -6,4 +6,5 @@ export interface Language {
   templateFiles(): ReadonlyArray<string>;
   offerToInstallTools(): Promise<string | undefined>;
   installTools(projectDir: string): Promise<Errorable<null>>;
+  augment(answers: any): any;
 }

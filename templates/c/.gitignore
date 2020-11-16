@@ -1,2 +1,5 @@
 # WASM output files
 *.wasm
+
+# WASI SDK
+.tools

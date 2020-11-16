@@ -5,6 +5,10 @@ import { Language } from './language';
 import { Errorable, failed } from '../utils/errorable';
 import { Platform, shell } from '../utils/shell';
 
+const WASI_SDK_MAJOR = 11;
+const WASI_SDK_MINOR = 0;
+const TOOLS_PATH = '.tools';
+
 export const clang: Language = {
   // TODO: better still help with setup, instead of just giving a bald message
   instructions(): ReadonlyArray<string> {
@@ -43,7 +47,7 @@ export const clang: Language = {
   },
 
   async installTools(projectDir: string): Promise<Errorable<null>> {
-    const toolsDir = path.join(projectDir, '.tools');
+    const toolsDir = path.join(projectDir, TOOLS_PATH);
     try {
       await mkdirp(toolsDir);
     } catch (e) {
@@ -55,17 +59,12 @@ export const clang: Language = {
       return { succeeded: false, error: ['WASI SDK is not available for your operating system'] };
     }
 
-    // WASI SDK version
-    const major = 11;
-    const minor = 0;
-    const os = platform === Platform.Linux ? 'linux' : 'macos';
-
     // Need to run:
     // wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${major}/wasi-sdk-${major}.${minor}-${os}.tar.gz -O ${tarPath}
     // tar xvf ${tarPath} -C ${toolsDir}
-
+    const os = platform === Platform.Linux ? 'linux' : 'macos';
     const tarPath = path.join(toolsDir, 'wasi-sdk.tar.gz');
-    const wgetsr = await shell.exec(`wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${major}/wasi-sdk-${major}.${minor}-${os}.tar.gz -O ${tarPath}`);
+    const wgetsr = await shell.exec(`wget https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_SDK_MAJOR}/wasi-sdk-${WASI_SDK_MAJOR}.${WASI_SDK_MINOR}-${os}.tar.gz -O ${tarPath}`);
 
     if (failed(wgetsr)) {
       return wgetsr;
@@ -82,5 +81,12 @@ export const clang: Language = {
     }
 
     return { succeeded: true, result: null };
+  },
+
+  augment(answers: any): any {
+    const wasiSdkPath = answers.installTools ?
+      path.join('.', TOOLS_PATH, `wasi-sdk-${WASI_SDK_MAJOR}.${WASI_SDK_MINOR}`) :
+      '~/wasi-sdk/wasi-sdk-11.0';
+    return Object.assign({}, answers, { wasiSdkPath });
   }
 }

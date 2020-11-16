@@ -83,13 +83,14 @@ function combinePath(basePath: string, relativePath: string) {
     return basePath + separator + relativePath;
 }
 
-function execOpts(): any {
+function execOpts(): shelljs.ExecOptions {
     let env = process.env;
     if (isWindows()) {
         env = Object.assign({}, env, { HOME: home() });
     }
     const opts = {
         env: env,
+        silent: true,
         async: true
     };
     return opts;
@@ -118,7 +119,7 @@ async function execObj<T>(cmd: string, cmdDesc: string, opts: ExecOpts, fn: ((st
     }
 }
 
-function execCore(cmd: string, opts: any): Promise<ShellResult> {
+function execCore(cmd: string, opts: shelljs.ExecOptions): Promise<ShellResult> {
     return new Promise<ShellResult>((resolve, _reject) => {
         shelljs.exec(cmd, opts, (code, stdout, stderr) => resolve({ code: code, stdout: stdout, stderr: stderr }));
     });
