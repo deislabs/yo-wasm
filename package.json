@@ -17,6 +17,8 @@
     "yeoman-generator"
   ],
   "devDependencies": {
+    "@types/mkdirp": "^1.0.1",
+    "@types/shelljs": "^0.8.8",
     "@types/yeoman-generator": "^4.11.3",
     "eslint": "^6.6.0",
     "jest": "^26.1.0",
@@ -28,8 +30,10 @@
     "npm": ">= 4.0.0"
   },
   "dependencies": {
-    "yeoman-generator": "^2.0.1",
     "chalk": "^2.1.0",
+    "mkdirp": "^1.0.4",
+    "shelljs": "^0.8.4",
+    "yeoman-generator": "^2.0.1",
     "yosay": "^2.0.1"
   },
   "jest": {

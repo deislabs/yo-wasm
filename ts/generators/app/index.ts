@@ -10,6 +10,7 @@ import { Language } from './languages/language';
 import { rust } from './languages/rust';
 import { clang } from './languages/c';
 import { assemblyScript } from './languages/assembly-script';
+import { failed } from './utils/errorable';
 
 module.exports = class extends Generator {
   private answers: any = undefined;
@@ -63,22 +64,26 @@ module.exports = class extends Generator {
 
     const answers = await this.prompt(prompts);
 
-    const additionalPrompts = providerSpecificPrompts(answers);
-    const additionalAnswers = await this.prompt(additionalPrompts);
+    const languagePrompts = await languageSpecificPrompts(answers);
+    const languageAnswers = await this.prompt(languagePrompts);
+
+    const providerPrompts = providerSpecificPrompts(answers);
+    const providerAnswers = await this.prompt(providerPrompts);
 
     // To access answers later, use this.answers.*
-    this.answers = Object.assign({}, answers, additionalAnswers);
+    this.answers = Object.assign({}, answers, languageAnswers, providerAnswers);
   }
 
   writing() {
     const language = languageProvider(this.answers.language);
     const templateFolder = language.templateFolder();
+    const templateValues = language.augment(this.answers);
 
     for (const path of language.templateFiles()) {
       this.fs.copyTpl(
         this.templatePath(fspath.join(templateFolder, path)),
         this.destinationPath(path),
-        this.answers
+        templateValues
       );
     }
 
@@ -86,14 +91,14 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath(fspath.join(templateFolder, `.github/workflows/${buildTemplate}`)),
       this.destinationPath(".github/workflows/build.yml"),
-      this.answers
+      templateValues
     );
 
     const releaseTemplate = providerReleaseTemplate(this.answers.registryProvider);
     this.fs.copyTpl(
       this.templatePath(fspath.join(templateFolder, `.github/workflows/${releaseTemplate}`)),
       this.destinationPath(".github/workflows/release.yml"),
-      this.answers
+      templateValues
     );
 
     // It would be good to install the language toolchain (and other local tools) here,
@@ -103,9 +108,20 @@ module.exports = class extends Generator {
     // do during generation.
   }
 
-  end() {
+  async end() {
     this.log('');
     this.log(chalk.green('Created project and GitHub workflows'));
+    if (this.answers.installTools) {
+      this.log('');
+      this.log('Installing tools...');
+      const installResult = await languageProvider(this.answers.language).installTools(this.destinationPath('.'));
+      if (failed(installResult)) {
+        this.log(`${chalk.red('Tool installation failed!')} Install tools manually.`);
+        this.log(`Error details: ${installResult.error[0]}`);
+      } else {
+        this.log('Installation complete');
+      }
+    }
     this.log('');
     for (const instruction of providerSpecificInstructions(this.answers)) {
       this.log(instruction);
@@ -150,6 +166,21 @@ function providerSpecificInstructions(answers: any): ReadonlyArray<string> {
 
 function providerReleaseTemplate(registryProvider: string): string {
   return provider(registryProvider).releaseTemplate();
+}
+
+async function languageSpecificPrompts(answers: any): Promise<Generator.Questions<any>> {
+  const toolOffer = await languageProvider(answers.language).offerToInstallTools();
+  const installationPrompts = toolOffer ?
+    [
+      {
+        type: 'confirm',
+        name: 'installTools',
+        message: `Would you like to install build tools (${toolOffer})?`,
+        default: true,
+      }
+    ]
+    : [];
+  return installationPrompts;
 }
 
 function languageSpecificInstructions(answers: any): ReadonlyArray<string> {
