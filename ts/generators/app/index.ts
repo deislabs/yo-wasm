@@ -24,13 +24,14 @@ module.exports = class extends Generator {
 
   async prompting() {
     const username = this.user.git.name() || process.env.USER || process.env.USERNAME;
+    const appname = this.appname.replace(/ /g, '-');
 
     const prompts: Generator.Questions<any> = [
       {
         type: 'input',
         name: 'moduleName',
         message: 'What is the name of the WASM module?',
-        default: this.appname
+        default: appname
       },
       {
         type: 'input',
