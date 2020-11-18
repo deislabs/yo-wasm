@@ -1,8 +1,8 @@
 {
-  "name": "generator-wasm-oci",
+  "name": "generator-wasm",
   "version": "0.0.1",
-  "description": "Publish programs as WASM modules via OCI registries",
-  "homepage": "https://github.com/deislabs/generator-wasm-oci",
+  "description": "Publish programs as WASM modules",
+  "homepage": "https://github.com/deislabs/generator-wasm",
   "author": {
     "name": "itowlson",
     "email": "ivan.towlson@microsoft.com"

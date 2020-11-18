@@ -1,22 +1,22 @@
-# generator-wasm-oci [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# generator-wasm [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
 Generate WASM modules that can be pushed to OCI registries, for example
 for use with [Krustlet](https://github.com/deislabs/krustlet).
 
 **This generator is currently work in progress.  You cannot yet install it using npm.**
 If you would like to try it, you can clone
-the repo and run `npm run compile && npm link` to hook it up to Yeoman so that you can run `yo wasm-oci`.
+the repo and run `npm run compile && npm link` to hook it up to Yeoman so that you can run `yo wasm`.
 Or let us know so that we're motivated to get it ready for a proper release!
 
 ## Installation
 
 First, install [Yeoman](http://yeoman.io) using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
-**NOTE: You can't install `generator-wasm-oci` using `npm install` yet - for now you need to run `npm run compile && npm link` as described above.**  ~~Then install `generator-wasm-oci` also using `npm`.~~
+**NOTE: You can't install `generator-wasm` using `npm install` yet - for now you need to run `npm run compile && npm link` as described above.**  ~~Then install `generator-wasm` also using `npm`.~~
 
 ```bash
 npm install -g yo
-# npm install -g generator-wasm-oci
+# npm install -g generator-wasm
 # for now do instead:
 npm install && npm run compile && npm link
 ```
@@ -26,7 +26,7 @@ Then generate your new project:
 ```console
 $ mkdir myproject
 $ cd myproject
-$ yo wasm-oci
+$ yo wasm
 ```
 
 ## Setting up a project
@@ -90,9 +90,9 @@ For more information see the [Code of Conduct
 FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact
 [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-[npm-image]: https://badge.fury.io/js/generator-wasm-oci.svg
-[npm-url]: https://npmjs.org/package/generator-wasm-oci
-[travis-image]: https://travis-ci.com/deislabs/generator-wasm-oci.svg?branch=master
-[travis-url]: https://travis-ci.com/deislabs/generator-wasm-oci
-[daviddm-image]: https://david-dm.org/deislabs/generator-wasm-oci.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/deislabs/generator-wasm-oci
+[npm-image]: https://badge.fury.io/js/generator-wasm.svg
+[npm-url]: https://npmjs.org/package/generator-wasm
+[travis-image]: https://travis-ci.com/deislabs/generator-wasm.svg?branch=master
+[travis-url]: https://travis-ci.com/deislabs/generator-wasm
+[daviddm-image]: https://david-dm.org/deislabs/generator-wasm.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/deislabs/generator-wasm

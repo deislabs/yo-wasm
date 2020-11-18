@@ -27,5 +27,5 @@ jobs:
     - name: Save package artifact
       uses: actions/upload-artifact@v2
       with:
-        name: generator-wasm-oci
-        path: generator-wasm-oci-*.tgz
+        name: generator-wasm
+        path: generator-wasm-*.tgz

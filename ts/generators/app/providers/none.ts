@@ -1,7 +1,7 @@
 import Generator = require('yeoman-generator');
 
-export const defaultRegistry = {
+export const noRegistry = {
   prompts(): Generator.Questions<any> { return []; },
   instructions(): ReadonlyArray<string> { return []; },
-  releaseTemplate(): string { return 'release.yml'; }
+  releaseTemplate(): string { return 'release.nopublish.yml'; }
 }

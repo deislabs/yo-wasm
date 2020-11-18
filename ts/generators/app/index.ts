@@ -4,13 +4,16 @@ import * as fspath from 'path';
 
 import { Registry } from './providers/registry';
 import { acr } from './providers/acr';
-import { defaultRegistry } from './providers/default';
+import { noRegistry } from './providers/none';
 
 import { Language } from './languages/language';
 import { rust } from './languages/rust';
 import { clang } from './languages/c';
 import { assemblyScript } from './languages/assembly-script';
 import { failed } from './utils/errorable';
+
+const REGISTRY_CHOICE_ACR = "Azure Container Registry";
+const REGISTRY_CHOICE_NONE = "I don't want to publish to an OCI registry";
 
 module.exports = class extends Generator {
   private answers: any = undefined;
@@ -56,7 +59,8 @@ module.exports = class extends Generator {
         name: 'registryProvider',
         message: 'What registry provider do you plan to publish the module to?',
         choices: [
-          'Azure Container Registry'
+          REGISTRY_CHOICE_ACR,
+          REGISTRY_CHOICE_NONE
         ],
         default: 'Azure Container Registry'
       }
@@ -136,10 +140,12 @@ module.exports = class extends Generator {
 
 function provider(registryProvider: string): Registry {
   switch (registryProvider) {
-    case 'Azure Container Registry':
+    case REGISTRY_CHOICE_ACR:
       return acr;
+    case REGISTRY_CHOICE_NONE:
+      return noRegistry;
     default:
-      return defaultRegistry;
+      return noRegistry;
   }
 }
 
