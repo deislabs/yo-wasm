@@ -56,6 +56,6 @@
     "pretest": "eslint .",
     "test": "jest"
   },
-  "repository": "https://github.com/deislabs/generator-wasm-oci",
+  "repository": "https://github.com/deislabs/generator-wasm",
   "license": "MIT"
 }
