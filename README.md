@@ -3,22 +3,15 @@
 Generate WASM modules that can be pushed to OCI registries, for example
 for use with [Krustlet](https://github.com/deislabs/krustlet).
 
-**This generator is currently work in progress.  You cannot yet install it using npm.**
-If you would like to try it, you can clone
-the repo and run `npm run compile && npm link` to hook it up to Yeoman so that you can run `yo wasm`.
-Or let us know so that we're motivated to get it ready for a proper release!
-
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
-
-**NOTE: You can't install `generator-wasm` using `npm install` yet - for now you need to run `npm run compile && npm link` as described above.**  ~~Then install `generator-wasm` also using `npm`.~~
+First, install [Yeoman](http://yeoman.io) using [npm](https://www.npmjs.com/) 
+(we assume you have pre-installed [node.js](https://nodejs.org/)).
+Then install `generator-wasm` also using `npm`.
 
 ```bash
 npm install -g yo
-# npm install -g generator-wasm
-# for now do instead:
-npm install && npm run compile && npm link
+npm install -g generator-wasm
 ```
 
 Then generate your new project:
@@ -81,14 +74,30 @@ _NOTE: during testing we sometimes see that GitHub workflows do not run on the i
 commit, or if you tag the initial commit. It usually works - but you **may** need to
 push a change to `main` before the workflows will run._
 
-## Code of Conduct
+## Contributing
 
-This project has adopted the [Microsoft Open Source Code of
-Conduct](https://opensource.microsoft.com/codeofconduct/).
+This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
+the rights to use your contribution. For details, visit https://cla.microsoft.com.
 
-For more information see the [Code of Conduct
-FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact
-[opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
+a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
+provided by the bot. You will only need to do this once across all repos using our CLA.
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
+contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## Running from source
+
+If you would like to run the generator from source, or modify it, you can clone
+the repo and run `npm install && npm run compile && npm link` 
+to hook it up to Yeoman so that you can run `yo wasm`.
+
+```bash
+npm install -g yo
+npm install && npm run compile && npm link
+```
 
 [npm-image]: https://badge.fury.io/js/generator-wasm.svg
 [npm-url]: https://npmjs.org/package/generator-wasm
