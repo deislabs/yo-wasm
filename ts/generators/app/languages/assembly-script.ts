@@ -14,7 +14,7 @@ export const assemblyScript: Language = {
 
   templateFiles(): string[] {
     return [
-      '.gitignore',
+      '.gitignore.removeext',
       'asconfig.json',
       'LICENSE',
       'package.json',

@@ -27,7 +27,7 @@ export const clang: Language = {
 
   templateFiles(): string[] {
     return [
-      '.gitignore',
+      '.gitignore.removeext',
       'LICENSE',
       'Makefile',
       'README.md',
