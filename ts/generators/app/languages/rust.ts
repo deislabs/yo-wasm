@@ -22,7 +22,7 @@ export const rust: Language = {
 
   templateFiles(): string[] {
     return [
-      '.gitignore',
+      '.gitignore.removeext',
       'Cargo.toml',
       'LICENSE',
       'README.md',

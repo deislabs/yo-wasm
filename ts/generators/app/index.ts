@@ -86,7 +86,7 @@ module.exports = class extends Generator {
     for (const path of language.templateFiles()) {
       this.fs.copyTpl(
         this.templatePath(fspath.join(templateFolder, path)),
-        this.destinationPath(path),
+        removeSuppressionExtension(this.destinationPath(path)),
         templateValues
       );
     }
@@ -191,4 +191,11 @@ async function languageSpecificPrompts(answers: any): Promise<Generator.Question
 
 function languageSpecificInstructions(answers: any): ReadonlyArray<string> {
   return languageProvider(answers.language).instructions();
+}
+
+function removeSuppressionExtension(path: string): string {
+  if (fspath.extname(path) === '.removeext') {
+    return path.substring(0, path.length - '.removeext'.length);
+  }
+  return path;
 }
