@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Debug WASM",
+            "type": "lldb",
+            "request": "launch",
+            "program": "wasmtime",
+            "args": [
+                "run",
+                "${workspaceFolder}/${workspaceRootFolderName}.wasm",
+                "-g"
+            ],
+            "cwd": "${workspaceFolder}",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "preLaunchTask": "Swift: Build WASM"
+        }
+    ]
+}

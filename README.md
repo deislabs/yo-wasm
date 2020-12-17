@@ -94,9 +94,11 @@ If you would like to run the generator from source, or modify it, you can clone
 the repo and run `npm install && npm run compile && npm link` 
 to hook it up to Yeoman so that you can run `yo wasm`.
 
-```bash
-npm install -g yo
-npm install && npm run compile && npm link
+```console
+$ npm install -g yo
+$ npm install
+$ npm run compile
+$ npm link
 ```
 
 [npm-image]: https://badge.fury.io/js/generator-wasm.svg
@@ -105,3 +107,17 @@ npm install && npm run compile && npm link
 [travis-url]: https://travis-ci.com/deislabs/generator-wasm
 [daviddm-image]: https://david-dm.org/deislabs/generator-wasm.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/deislabs/generator-wasm
+
+## Adding New Languages
+
+To add a new language, follow these steps:
+
+- Add a new language installer in `languages`, e.g. `languages/swift.ts`
+- Inside that file, implement the `Language` interface. The `languages/rust.ts` file is a great example.
+- Add any template files that `yo wasm` should install for you.
+  - For example, Swift template files go in `templates/swift`
+  - Good starting points are VS Code config files, a `LICENSE`, and a `README.md`
+- Make sure that your `languages/` TypeScript is updated to point to those files.
+- Edit `index.ts` to modify the prompts there accordingly.
+  - Given that this code is evolving, we suggest opening the file and looking for the term `Rust`. Then replicate the same behaviors for your desired language.
+- Test it out by following the instructions in the **Running from source** section above.

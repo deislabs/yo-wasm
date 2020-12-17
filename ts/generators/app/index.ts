@@ -11,6 +11,7 @@ import { rust } from './languages/rust';
 import { clang } from './languages/c';
 import { assemblyScript } from './languages/assembly-script';
 import { failed } from './utils/errorable';
+import { swift } from './languages/swift';
 
 const REGISTRY_CHOICE_ACR = "Azure Container Registry";
 const REGISTRY_CHOICE_NONE = "I don't want to publish to an OCI registry";
@@ -47,10 +48,11 @@ module.exports = class extends Generator {
         type: 'list',
         name: 'language',
         message: 'What programming language will you write the module in?',
-        choices: [
-          'Rust',
+        choices: [ // In alphabetical order
           'AssemblyScript',
-          'C'
+          'C',
+          'Rust',
+          'Swift'
         ],
         default: 'Rust'
       },
@@ -157,6 +159,8 @@ function languageProvider(language: string): Language {
       return assemblyScript;
     case 'C':
       return clang;
+    case 'Swift':
+      return swift;
     default:
       throw new Error("You didn't choose a language");
   }

@@ -1,0 +1,45 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        wasi_sdk_version:
+        - major: 11
+          minor: 0
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install SwiftWasm
+      run: |
+        apt-get install \
+          binutils \
+          git \
+          gnupg2 \
+          libc6-dev \
+          libcurl4 \
+          libedit2 \
+          libgcc-9-dev \
+          libpython2.7 \
+          libsqlite3-0 \
+          libstdc++-9-dev \
+          libxml2 \
+          libz3-dev \
+          pkg-config \
+          tzdata \
+          zlib1g-dev
+        wget https://github.com/swiftwasm/swift/releases/download/swift-wasm-5.3.0-RELEASE/swift-wasm-5.3.0-RELEASE-ubuntu20.04_x86_64.tar.gz
+        tar zxvf swift-wasm-5.3.0-RELEASE-ubuntu20.04_x86_64.tar.gz
+        ls -lah
+        export PATH=$(pwd)/usr/bin:"${PATH}"
+    - name: Build
+      run: make build
