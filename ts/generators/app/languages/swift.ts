@@ -48,6 +48,10 @@ export const swift: Language = {
     },
 
     augment(answers: any): any {
-        return answers;
+        // The Swift-Wasm documentation only references a fixed path for this.
+        // There probably should be a better way of doing this. On Linux, this is simply ignored.
+        const wasiSdkPath = "/Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin"
+
+        return Object.assign({}, answers, { wasiSdkPath });
     }
 }
