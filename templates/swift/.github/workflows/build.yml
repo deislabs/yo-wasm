@@ -15,13 +15,13 @@ jobs:
         - major: 11
           minor: 0
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
     - name: Install SwiftWasm
       run: |
-        apt-get install \
+        sudo apt-get install \
           binutils \
           git \
           gnupg2 \
@@ -38,8 +38,9 @@ jobs:
           tzdata \
           zlib1g-dev
         wget https://github.com/swiftwasm/swift/releases/download/swift-wasm-5.3.0-RELEASE/swift-wasm-5.3.0-RELEASE-ubuntu20.04_x86_64.tar.gz
-        tar zxvf swift-wasm-5.3.0-RELEASE-ubuntu20.04_x86_64.tar.gz
-        ls -lah
-        export PATH=$(pwd)/usr/bin:"${PATH}"
+        sudo tar zxvf swift-wasm-5.3.0-RELEASE-ubuntu20.04_x86_64.tar.gz --directory / --strip-components=1
+        sudo chmod -R o+r /usr/lib/swift
+        ls -lah /usr/lib/swift
+        
     - name: Build
-      run: make build
+      run: SWIFTC=/usr/bin/swift make build

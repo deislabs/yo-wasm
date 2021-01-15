@@ -16,14 +16,14 @@ jobs:
 
     name: Build release assets
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Install SwiftWasm
       run: |
-        apt-get install \
+        sudo apt-get install \
           binutils \
           git \
           gnupg2 \
@@ -40,9 +40,8 @@ jobs:
           tzdata \
           zlib1g-dev
         wget https://github.com/swiftwasm/swift/releases/download/swift-wasm-5.3.0-RELEASE/swift-wasm-5.3.0-RELEASE-ubuntu20.04_x86_64.tar.gz
-        tar zxvf swift-wasm-5.3.0-RELEASE-ubuntu20.04_x86_64.tar.gz
-        ls -lah
-        export PATH=$(pwd)/usr/bin:"${PATH}"
+        sudo tar zxvf swift-wasm-5.3.0-RELEASE-ubuntu20.04_x86_64.tar.gz --directory / --strip-components=1
+        sudo chmod -R o+r /usr/lib/swift
 
     - name: Set the release version (tag)
       if: startsWith(github.ref, 'refs/tags/v')
@@ -54,7 +53,7 @@ jobs:
       run: echo "RELEASE_VERSION=canary" >> $GITHUB_ENV
 
     - name: Build release
-      run: make build
+      run: SWIFTC=/usr/bin/swift make build
 
     - name: Upload artifact
       uses: actions/upload-artifact@v1
