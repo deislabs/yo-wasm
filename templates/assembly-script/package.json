@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "A WASM hello-world",
   "scripts": {
-    "build:untouched": "asc assembly/index.ts --target debug",
-    "build:optimized": "asc assembly/index.ts --target release",
+    "build:untouched": "asc assembly/index.ts --target debug --use abort=wasi_abort",
+    "build:optimized": "asc assembly/index.ts --target release --use abort=wasi_abort",
     "build": "npm run build:untouched && npm run build:optimized"
   },
   "author": "<%= authorName %>",
