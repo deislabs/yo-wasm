@@ -14,7 +14,8 @@ import { failed } from './utils/errorable';
 import { swift } from './languages/swift';
 
 const REGISTRY_CHOICE_ACR = "Azure Container Registry";
-const REGISTRY_CHOICE_NONE = "I don't want to publish to an OCI registry";
+const REGISTRY_CHOICE_HIPPO = "Hippo";
+const REGISTRY_CHOICE_NONE = "I don't want to publish the module";
 
 module.exports = class extends Generator {
   private answers: any = undefined;
@@ -59,9 +60,10 @@ module.exports = class extends Generator {
       {
         type: 'list',
         name: 'registryProvider',
-        message: 'What registry provider do you plan to publish the module to?',
+        message: 'Where do you plan to publish the module?',
         choices: [
           REGISTRY_CHOICE_ACR,
+          REGISTRY_CHOICE_HIPPO,
           REGISTRY_CHOICE_NONE
         ],
         default: 'Azure Container Registry'
@@ -82,10 +84,20 @@ module.exports = class extends Generator {
 
   writing() {
     const language = languageProvider(this.answers.language);
+    const registry = provider(this.answers.registry);
+
     const templateFolder = language.templateFolder();
     const templateValues = language.augment(this.answers);
 
     for (const path of language.templateFiles()) {
+      this.fs.copyTpl(
+        this.templatePath(fspath.join(templateFolder, path)),
+        removeSuppressionExtension(this.destinationPath(path)),
+        templateValues
+      );
+    }
+
+    for (const path of registry.languageFiles()) {
       this.fs.copyTpl(
         this.templatePath(fspath.join(templateFolder, path)),
         removeSuppressionExtension(this.destinationPath(path)),
@@ -100,7 +112,7 @@ module.exports = class extends Generator {
       templateValues
     );
 
-    const releaseTemplate = providerReleaseTemplate(this.answers.registryProvider);
+    const releaseTemplate = registry.releaseTemplate();
     this.fs.copyTpl(
       this.templatePath(fspath.join(templateFolder, `.github/workflows/${releaseTemplate}`)),
       this.destinationPath(".github/workflows/release.yml"),
@@ -172,10 +184,6 @@ function providerSpecificPrompts(answers: any): any {
 
 function providerSpecificInstructions(answers: any): ReadonlyArray<string> {
   return provider(answers.registryProvider).instructions(answers);
-}
-
-function providerReleaseTemplate(registryProvider: string): string {
-  return provider(registryProvider).releaseTemplate();
 }
 
 async function languageSpecificPrompts(answers: any): Promise<Generator.Questions<any>> {

@@ -1,0 +1,7 @@
+[bindle]
+name = "<%= moduleName %>"
+version = "0.1.0"
+authors = ["<%= authorName %>"]
+
+[files]
+wasm = ["target/wasm32-wasi/release/<%= moduleName %>.wasm"]

@@ -24,6 +24,7 @@ export const rust: Language = {
     return [
       '.gitignore.removeext',
       'Cargo.toml',
+      'HIPPOFACTS',
       'LICENSE',
       'README.md',
       '.cargo/config.toml',

@@ -33,6 +33,10 @@ export const acr: Registry = {
     ];
   },
 
+  languageFiles(): ReadonlyArray<string> {
+    return [];
+  },
+
   releaseTemplate(): string {
     return 'release.azurecr.yml';
   }
