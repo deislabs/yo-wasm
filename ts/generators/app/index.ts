@@ -99,7 +99,7 @@ module.exports = class extends Generator {
       );
     }
 
-    let appendToReadMe = (line: string) =>
+    const appendToReadMe = (line: string) =>
       this.fs.append(this.destinationPath("README.md"), line, { trimEnd: false });
 
     logParagraph(appendToReadMe, '## Dev releases', registry.localInstructions(FMT_MARKDOWN, this.answers));
@@ -112,6 +112,13 @@ module.exports = class extends Generator {
         removeSuppressionExtension(this.destinationPath(path)),
         templateValues
       );
+    }
+
+    const tasksFilePath = this.destinationPath('.vscode/tasks.json');
+    if (this.fs.exists(tasksFilePath)) {
+      const tasksFile = this.fs.readJSON(tasksFilePath) as unknown as TasksFile;
+      tasksFile.tasks = purgeIrrelevant(tasksFile.tasks, this.answers.registryProvider);
+      this.fs.writeJSON(tasksFilePath, tasksFile);
     }
 
     const buildTemplate = 'build.yml';
@@ -223,4 +230,30 @@ function removeSuppressionExtension(path: string): string {
     return path.substring(0, path.length - '.removeext'.length);
   }
   return path;
+}
+
+interface TasksFile {
+  version: string;
+  tasks: TasksFileTask[];
+}
+
+interface TasksFileTask {
+  label: string;
+  [key: string]: any;
+}
+
+function purgeIrrelevant(tasks: TasksFileTask[], registry: string): TasksFileTask[] {
+  return tasks.filter((t) => isRelevant(t, registry)).map(removeLabelPrefix);
+}
+
+function isRelevant(task: TasksFileTask, registry: string): boolean {
+  // It's relevant if it applies to this registry, or always applies
+  return task.label.startsWith(`#OPT:${registry}# `) || !task.label.startsWith('#OPT');
+}
+
+function removeLabelPrefix(task: TasksFileTask): TasksFileTask {
+  if (task.label.startsWith('#OPT')) {
+    task.label = task.label.substr(task.label.indexOf('# ') + 2).trimLeft();
+  }
+  return task;
 }
