@@ -1,7 +1,8 @@
+import { Formatter } from "../formatter";
 import { Errorable } from "../utils/errorable";
 
 export interface Language {
-  instructions(): ReadonlyArray<string>;
+  instructions(formatter: Formatter): ReadonlyArray<string>;
   templateFolder(): string;
   templateFiles(): ReadonlyArray<string>;
   offerToInstallTools(): Promise<string | undefined>;

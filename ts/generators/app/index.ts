@@ -4,6 +4,7 @@ import * as fspath from 'path';
 
 import { Registry } from './providers/registry';
 import { acr } from './providers/acr';
+import { hippo } from './providers/hippo';
 import { noRegistry } from './providers/none';
 
 import { Language } from './languages/language';
@@ -12,6 +13,7 @@ import { clang } from './languages/c';
 import { assemblyScript } from './languages/assembly-script';
 import { failed } from './utils/errorable';
 import { swift } from './languages/swift';
+import { FMT_CHALK, FMT_MARKDOWN } from './formatter';
 
 const REGISTRY_CHOICE_ACR = "Azure Container Registry";
 const REGISTRY_CHOICE_HIPPO = "Hippo";
@@ -84,7 +86,7 @@ module.exports = class extends Generator {
 
   writing() {
     const language = languageProvider(this.answers.language);
-    const registry = provider(this.answers.registry);
+    const registry = provider(this.answers.registryProvider);
 
     const templateFolder = language.templateFolder();
     const templateValues = language.augment(this.answers);
@@ -96,6 +98,13 @@ module.exports = class extends Generator {
         templateValues
       );
     }
+
+    let appendToReadMe = (line: string) =>
+      this.fs.append(this.destinationPath("README.md"), line, { trimEnd: false });
+
+    logParagraph(appendToReadMe, '## Dev releases', registry.localInstructions(FMT_MARKDOWN, this.answers));
+    logParagraph(appendToReadMe, '## CI releases', registry.workflowInstructions(FMT_MARKDOWN, this.answers));
+    appendToReadMe('');
 
     for (const path of registry.languageFiles()) {
       this.fs.copyTpl(
@@ -127,12 +136,15 @@ module.exports = class extends Generator {
   }
 
   async end() {
+    const language = languageProvider(this.answers.language);
+    const registry = provider(this.answers.registryProvider);
+
     this.log('');
     this.log(chalk.green('Created project and GitHub workflows'));
     if (this.answers.installTools) {
       this.log('');
       this.log('Installing tools...');
-      const installResult = await languageProvider(this.answers.language).installTools(this.destinationPath('.'));
+      const installResult = await language.installTools(this.destinationPath('.'));
       if (failed(installResult)) {
         this.log(`${chalk.red('Tool installation failed!')} Install tools manually.`);
         this.log(`Error details: ${installResult.error[0]}`);
@@ -140,22 +152,31 @@ module.exports = class extends Generator {
         this.log('Installation complete');
       }
     }
-    this.log('');
-    for (const instruction of providerSpecificInstructions(this.answers)) {
-      this.log(instruction);
-    }
-    this.log('');
-    for (const instruction of languageSpecificInstructions(this.answers)) {
-      this.log(instruction);
-    }
+    logParagraph(this.log, chalk.yellow('Building'), language.instructions(FMT_CHALK));
+    logParagraph(this.log, chalk.yellow('Dev releases'), registry.localInstructions(FMT_CHALK, this.answers));
+    logParagraph(this.log, chalk.yellow('CI releases'), registry.workflowInstructions(FMT_CHALK, this.answers));
     this.log('');
   }
 };
+
+function logParagraph(log: (line: string) => void, title: string, lines: ReadonlyArray<string>) {
+  if (lines.length === 0) {
+    return;
+  }
+  log('');
+  log(title);
+  log('');
+  for (const line of lines) {
+    log(line);
+  }
+}
 
 function provider(registryProvider: string): Registry {
   switch (registryProvider) {
     case REGISTRY_CHOICE_ACR:
       return acr;
+    case REGISTRY_CHOICE_HIPPO:
+      return hippo;
     case REGISTRY_CHOICE_NONE:
       return noRegistry;
     default:
@@ -182,10 +203,6 @@ function providerSpecificPrompts(answers: any): any {
   return provider(answers.registryProvider).prompts(answers);
 }
 
-function providerSpecificInstructions(answers: any): ReadonlyArray<string> {
-  return provider(answers.registryProvider).instructions(answers);
-}
-
 async function languageSpecificPrompts(answers: any): Promise<Generator.Questions<any>> {
   const toolOffer = await languageProvider(answers.language).offerToInstallTools();
   const installationPrompts = toolOffer ?
@@ -199,10 +216,6 @@ async function languageSpecificPrompts(answers: any): Promise<Generator.Question
     ]
     : [];
   return installationPrompts;
-}
-
-function languageSpecificInstructions(answers: any): ReadonlyArray<string> {
-  return languageProvider(answers.language).instructions();
 }
 
 function removeSuppressionExtension(path: string): string {
