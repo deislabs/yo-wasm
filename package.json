@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "preview": true,
   "description": "Publish programs as WASM modules",
-  "homepage": "https://github.com/deislabs/generator-wasm",
+  "homepage": "https://github.com/deislabs/yo-wasm",
   "author": {
     "name": "itowlson",
     "email": "ivan.towlson@microsoft.com"
@@ -57,6 +57,6 @@
     "pretest": "eslint .",
     "test": "jest"
   },
-  "repository": "https://github.com/deislabs/generator-wasm",
+  "repository": "https://github.com/deislabs/yo-wasm",
   "license": "MIT"
 }
