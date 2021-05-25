@@ -1,4 +1,4 @@
-# generator-wasm [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# yo wasm
 
 Generate WASM modules that can be pushed to OCI registries, for example
 for use with [Krustlet](https://github.com/deislabs/krustlet).
