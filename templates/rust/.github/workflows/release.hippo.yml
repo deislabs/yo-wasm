@@ -36,7 +36,7 @@ jobs:
     - name: Install hippofactory
       run: |
         mkdir -p tools/tmp
-        wget https://github.com/deislabs/hippofactory/releases/download/v0.2.0/hippofactory-v0.1.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippofactory.tar.gz
+        wget https://github.com/deislabs/hippofactory/releases/download/v0.2.0/hippofactory-v0.2.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippofactory.tar.gz
         tar xf ./tools/tmp/hippofactory.tar.gz -C ./tools
 
     - name: Publish bindle
