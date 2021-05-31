@@ -2,4 +2,5 @@ import "wasi";
 
 import { Console } from "as-wasi";
 
-Console.log("Hello, world!");
+<% if (wagi) { %>Console.log("Content-Type: text/plain\n");
+<% } %>Console.log("Hello, world!");

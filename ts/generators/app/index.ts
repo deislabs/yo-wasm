@@ -19,6 +19,9 @@ const REGISTRY_CHOICE_ACR = "Azure Container Registry";
 const REGISTRY_CHOICE_HIPPO = "Hippo";
 const REGISTRY_CHOICE_NONE = "I don't want to publish the module";
 
+const PROJ_KIND_CONSOLE = "Console or batch job";
+const PROJ_KIND_WAGI = "Web service or application using WAGI";
+
 module.exports = class extends Generator {
   private answers: any = undefined;
 
@@ -40,6 +43,15 @@ module.exports = class extends Generator {
         name: 'moduleName',
         message: 'What is the name of the WASM module?',
         default: appname
+      },
+      {
+        type: 'list',
+        name: 'moduleKind',
+        message: 'What type of application is the module?',
+        choices: [
+          PROJ_KIND_CONSOLE,
+          PROJ_KIND_WAGI,
+        ],
       },
       {
         type: 'input',
@@ -80,8 +92,10 @@ module.exports = class extends Generator {
     const providerPrompts = providerSpecificPrompts(answers);
     const providerAnswers = await this.prompt(providerPrompts);
 
+    const answerConversions = simplify(answers);
+
     // To access answers later, use this.answers.*
-    this.answers = Object.assign({}, answers, languageAnswers, providerAnswers);
+    this.answers = Object.assign({}, answers, languageAnswers, providerAnswers, answerConversions);
   }
 
   writing() {
@@ -230,6 +244,12 @@ function removeSuppressionExtension(path: string): string {
     return path.substring(0, path.length - '.removeext'.length);
   }
   return path;
+}
+
+function simplify(answers: any): any {
+  return {
+    wagi: (answers.moduleKind === PROJ_KIND_WAGI),
+  };
 }
 
 interface TasksFile {
