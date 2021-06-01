@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "TinyGo: Init",
+            "type": "shell",
+            "command": "make init"
+        },
+        {
+            "label": "TinyGo: Test",
+            "type": "shell",
+            "command": "make test"
+        },
+        {
+            "label": "TinyGo: Build WASM",
+            "type": "shell",
+            "command": "make build"
+        }
+    ]
+}

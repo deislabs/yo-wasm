@@ -1,0 +1,14 @@
+{
+  "configurations": [
+      {
+          "name": "TinyGo: Debug WASM",
+          "type": "lldb",
+          "request": "launch",
+          "program": "wasmtime",
+          "args": ["run", "${workspaceFolder}/${workspaceRootFolderName}.wasm", "-g"],
+          "cwd": "${workspaceFolder}",
+          "sourceLanguages": ["tinygo"],
+          "preLaunchTask": "TinyGo: Build WASM"
+    }
+]
+}
