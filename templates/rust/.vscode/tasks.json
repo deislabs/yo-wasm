@@ -14,6 +14,12 @@
             "command": "cargo",
             "args": ["build", "--target", "wasm32-wasi"],
             "problemMatcher": ["$rustc"]
-        }
+          },
+          {
+            "label": "#OPT:Hippo# Hippo: Publish Development Build",
+            "type": "shell",
+            "command": "hippofactory",
+            "args": ["."]
+          }
     ]
 }

@@ -1,0 +1,52 @@
+name: release
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+env:
+  BINDLE_SERVER_URL: <%= serverUrl %>
+
+jobs:
+  publish:
+    name: Build release assets
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - name: Set the release version (tag)
+      if: startsWith(github.ref, 'refs/tags/v')
+      shell: bash
+      run: echo "RELEASE_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+    - name: Set the release version (main)
+      if: github.ref == 'refs/heads/main'
+      shell: bash
+      run: echo "RELEASE_VERSION=canary" >> $GITHUB_ENV
+
+    - name: Build release
+      run: |
+        npm install
+        npm run build
+
+    - name: Install hippofactory
+      run: |
+        mkdir -p tools/tmp
+        wget https://github.com/deislabs/hippofactory/releases/download/v0.3.0/hippofactory-v0.3.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippofactory.tar.gz
+        tar xf ./tools/tmp/hippofactory.tar.gz -C ./tools
+
+    - name: Publish bindle (tagged)
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: ./tools/hippofactory . -v production -o message
+
+    - name: Publish bindle (main)
+      if: github.ref == 'refs/heads/main'
+      run: USER=canary ./tools/hippofactory . -o message

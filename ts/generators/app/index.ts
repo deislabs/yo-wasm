@@ -4,6 +4,7 @@ import * as fspath from 'path';
 
 import { Registry } from './providers/registry';
 import { acr } from './providers/acr';
+import { hippo } from './providers/hippo';
 import { noRegistry } from './providers/none';
 
 import { Language } from './languages/language';
@@ -12,9 +13,14 @@ import { clang } from './languages/c';
 import { assemblyScript } from './languages/assembly-script';
 import { failed } from './utils/errorable';
 import { swift } from './languages/swift';
+import { FMT_CHALK, FMT_MARKDOWN } from './formatter';
 
 const REGISTRY_CHOICE_ACR = "Azure Container Registry";
-const REGISTRY_CHOICE_NONE = "I don't want to publish to an OCI registry";
+const REGISTRY_CHOICE_HIPPO = "Hippo";
+const REGISTRY_CHOICE_NONE = "I don't want to publish the module";
+
+const PROJ_KIND_CONSOLE = "Console or batch job";
+const PROJ_KIND_WAGI = "Web service or application using WAGI";
 
 module.exports = class extends Generator {
   private answers: any = undefined;
@@ -39,6 +45,15 @@ module.exports = class extends Generator {
         default: appname
       },
       {
+        type: 'list',
+        name: 'moduleKind',
+        message: 'What type of application is the module?',
+        choices: [
+          PROJ_KIND_CONSOLE,
+          PROJ_KIND_WAGI,
+        ],
+      },
+      {
         type: 'input',
         name: 'authorName',
         message: 'What is the name of the author?',
@@ -59,9 +74,10 @@ module.exports = class extends Generator {
       {
         type: 'list',
         name: 'registryProvider',
-        message: 'What registry provider do you plan to publish the module to?',
+        message: 'Where do you plan to publish the module?',
         choices: [
           REGISTRY_CHOICE_ACR,
+          REGISTRY_CHOICE_HIPPO,
           REGISTRY_CHOICE_NONE
         ],
         default: 'Azure Container Registry'
@@ -76,12 +92,16 @@ module.exports = class extends Generator {
     const providerPrompts = providerSpecificPrompts(answers);
     const providerAnswers = await this.prompt(providerPrompts);
 
+    const answerConversions = simplify(answers);
+
     // To access answers later, use this.answers.*
-    this.answers = Object.assign({}, answers, languageAnswers, providerAnswers);
+    this.answers = Object.assign({}, answers, languageAnswers, providerAnswers, answerConversions);
   }
 
   writing() {
     const language = languageProvider(this.answers.language);
+    const registry = provider(this.answers.registryProvider);
+
     const templateFolder = language.templateFolder();
     const templateValues = language.augment(this.answers);
 
@@ -93,6 +113,28 @@ module.exports = class extends Generator {
       );
     }
 
+    const appendToReadMe = (line: string) =>
+      this.fs.append(this.destinationPath("README.md"), line, { trimEnd: false });
+
+    logParagraph(appendToReadMe, '## Dev releases', registry.localInstructions(FMT_MARKDOWN, this.answers));
+    logParagraph(appendToReadMe, '## CI releases', registry.workflowInstructions(FMT_MARKDOWN, this.answers));
+    appendToReadMe('');
+
+    for (const path of registry.languageFiles()) {
+      this.fs.copyTpl(
+        this.templatePath(fspath.join(templateFolder, path)),
+        removeSuppressionExtension(this.destinationPath(path)),
+        templateValues
+      );
+    }
+
+    const tasksFilePath = this.destinationPath('.vscode/tasks.json');
+    if (this.fs.exists(tasksFilePath)) {
+      const tasksFile = this.fs.readJSON(tasksFilePath) as unknown as TasksFile;
+      tasksFile.tasks = purgeIrrelevant(tasksFile.tasks, this.answers.registryProvider);
+      this.fs.writeJSON(tasksFilePath, tasksFile);
+    }
+
     const buildTemplate = 'build.yml';
     this.fs.copyTpl(
       this.templatePath(fspath.join(templateFolder, `.github/workflows/${buildTemplate}`)),
@@ -100,7 +142,7 @@ module.exports = class extends Generator {
       templateValues
     );
 
-    const releaseTemplate = providerReleaseTemplate(this.answers.registryProvider);
+    const releaseTemplate = registry.releaseTemplate();
     this.fs.copyTpl(
       this.templatePath(fspath.join(templateFolder, `.github/workflows/${releaseTemplate}`)),
       this.destinationPath(".github/workflows/release.yml"),
@@ -115,12 +157,15 @@ module.exports = class extends Generator {
   }
 
   async end() {
+    const language = languageProvider(this.answers.language);
+    const registry = provider(this.answers.registryProvider);
+
     this.log('');
     this.log(chalk.green('Created project and GitHub workflows'));
     if (this.answers.installTools) {
       this.log('');
       this.log('Installing tools...');
-      const installResult = await languageProvider(this.answers.language).installTools(this.destinationPath('.'));
+      const installResult = await language.installTools(this.destinationPath('.'));
       if (failed(installResult)) {
         this.log(`${chalk.red('Tool installation failed!')} Install tools manually.`);
         this.log(`Error details: ${installResult.error[0]}`);
@@ -128,22 +173,31 @@ module.exports = class extends Generator {
         this.log('Installation complete');
       }
     }
-    this.log('');
-    for (const instruction of providerSpecificInstructions(this.answers)) {
-      this.log(instruction);
-    }
-    this.log('');
-    for (const instruction of languageSpecificInstructions(this.answers)) {
-      this.log(instruction);
-    }
+    logParagraph(this.log, chalk.yellow('Building'), language.instructions(FMT_CHALK));
+    logParagraph(this.log, chalk.yellow('Dev releases'), registry.localInstructions(FMT_CHALK, this.answers));
+    logParagraph(this.log, chalk.yellow('CI releases'), registry.workflowInstructions(FMT_CHALK, this.answers));
     this.log('');
   }
 };
+
+function logParagraph(log: (line: string) => void, title: string, lines: ReadonlyArray<string>) {
+  if (lines.length === 0) {
+    return;
+  }
+  log('');
+  log(title);
+  log('');
+  for (const line of lines) {
+    log(line);
+  }
+}
 
 function provider(registryProvider: string): Registry {
   switch (registryProvider) {
     case REGISTRY_CHOICE_ACR:
       return acr;
+    case REGISTRY_CHOICE_HIPPO:
+      return hippo;
     case REGISTRY_CHOICE_NONE:
       return noRegistry;
     default:
@@ -170,14 +224,6 @@ function providerSpecificPrompts(answers: any): any {
   return provider(answers.registryProvider).prompts(answers);
 }
 
-function providerSpecificInstructions(answers: any): ReadonlyArray<string> {
-  return provider(answers.registryProvider).instructions(answers);
-}
-
-function providerReleaseTemplate(registryProvider: string): string {
-  return provider(registryProvider).releaseTemplate();
-}
-
 async function languageSpecificPrompts(answers: any): Promise<Generator.Questions<any>> {
   const toolOffer = await languageProvider(answers.language).offerToInstallTools();
   const installationPrompts = toolOffer ?
@@ -193,13 +239,41 @@ async function languageSpecificPrompts(answers: any): Promise<Generator.Question
   return installationPrompts;
 }
 
-function languageSpecificInstructions(answers: any): ReadonlyArray<string> {
-  return languageProvider(answers.language).instructions();
-}
-
 function removeSuppressionExtension(path: string): string {
   if (fspath.extname(path) === '.removeext') {
     return path.substring(0, path.length - '.removeext'.length);
   }
   return path;
+}
+
+function simplify(answers: any): any {
+  return {
+    wagi: (answers.moduleKind === PROJ_KIND_WAGI),
+  };
+}
+
+interface TasksFile {
+  version: string;
+  tasks: TasksFileTask[];
+}
+
+interface TasksFileTask {
+  label: string;
+  [key: string]: any;
+}
+
+function purgeIrrelevant(tasks: TasksFileTask[], registry: string): TasksFileTask[] {
+  return tasks.filter((t) => isRelevant(t, registry)).map(removeLabelPrefix);
+}
+
+function isRelevant(task: TasksFileTask, registry: string): boolean {
+  // It's relevant if it applies to this registry, or always applies
+  return task.label.startsWith(`#OPT:${registry}# `) || !task.label.startsWith('#OPT');
+}
+
+function removeLabelPrefix(task: TasksFileTask): TasksFileTask {
+  if (task.label.startsWith('#OPT')) {
+    task.label = task.label.substr(task.label.indexOf('# ') + 2).trimLeft();
+  }
+  return task;
 }
