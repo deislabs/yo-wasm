@@ -91,8 +91,6 @@ export const hippo: Registry = {
     try {
       const { hippoUrl, hippoUsername, hippoPassword } = answers;
       const agent = new https.Agent({ rejectUnauthorized: false });
-      // TODO: WHY? WHY WON'T YOU WORK? YOU WORK EVERYWHERE ELSE!
-      // I HATE YOU. I WISH WE'D NEVER COME HERE.
       const client = await HippoClient.new(hippoUrl, hippoUsername, hippoPassword, agent);
       await client.createApplication(answers.moduleName, answers.ModuleName);
       log(chalk.green('Setup complete'));
