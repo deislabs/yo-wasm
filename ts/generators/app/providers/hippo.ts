@@ -92,7 +92,7 @@ export const hippo: Registry = {
       const { hippoUrl, hippoUsername, hippoPassword } = answers;
       const agent = new https.Agent({ rejectUnauthorized: false });
       const client = await HippoClient.new(hippoUrl, hippoUsername, hippoPassword, agent);
-      await client.createApplication(answers.moduleName, answers.ModuleName);
+      await client.createApplication(answers.moduleName, answers.moduleName);
       log(chalk.green('Setup complete'));
       return undefined;
     } catch (e) {
