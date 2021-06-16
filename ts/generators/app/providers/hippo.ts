@@ -1,23 +1,47 @@
-import Generator = require('yeoman-generator');
+import * as https from 'https';
+import chalk from "chalk";
+import { HippoClient } from "hippo-js";
 
 import { Registry } from "./registry";
 import { Formatter } from '../formatter';
 
 export const hippo: Registry = {
-  prompts(): Generator.Questions<any> {
+  prompts() {
     return [
       {
         type: 'input',
         name: 'hippoUrl',
         message: "What is the URL of your Hippo service?",
-        default: 'https://hippos.rocks',
+        default: 'https://localhost:5001/',
       },
       {
         type: 'input',
         name: 'serverUrl',
         message: "What is the URL of your Hippo's Bindle server?",
         default: 'https://bindle.hippos.rocks/v1',
-      }
+      },
+      {
+        type: 'confirm',
+        name: 'hippoCreateApp',
+        message: "Would you like to create a new Hippo application for this project?",
+        default: true,
+        moar: {
+          askIf: (ans) => !!ans,
+          moarQuestions: [
+            {
+              type: 'input',
+              name: 'hippoUsername',
+              message: "Enter your Hippo user name (will become app owner)",
+            },
+            {
+              type: 'password',
+              name: 'hippoPassword',
+              mask: '*',
+              message: "Enter your Hippo password",
+            },
+          ]
+        },
+      },
     ];
   },
 
@@ -58,5 +82,25 @@ export const hippo: Registry = {
 
   releaseTemplate(): string {
     return 'release.hippo.yml';
+  },
+
+  async prepareRegistry(answers: any, log: (line: string) => void): Promise<Error | undefined> {
+    log('');
+    log(chalk.green('Setting up your Hippo application...'));
+
+    try {
+      const { hippoUrl, hippoUsername, hippoPassword } = answers;
+      const agent = new https.Agent({ rejectUnauthorized: false });
+      // TODO: WHY? WHY WON'T YOU WORK? YOU WORK EVERYWHERE ELSE!
+      // I HATE YOU. I WISH WE'D NEVER COME HERE.
+      const client = await HippoClient.new(hippoUrl, hippoUsername, hippoPassword, agent);
+      await client.createApplication(answers.moduleName, answers.ModuleName);
+      log(chalk.green('Setup complete'));
+      return undefined;
+    } catch (e) {
+      log(`${chalk.red('Setup failed!')} You will need to create the Hippo app manually.`);
+      log(`The error was: ${e}`);
+      return e;
+    }
   }
 }

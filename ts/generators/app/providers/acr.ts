@@ -1,10 +1,8 @@
-import Generator = require('yeoman-generator');
-
 import { Registry } from "./registry";
 import { Formatter } from '../formatter';
 
 export const acr: Registry = {
-  prompts(answers: any): Generator.Questions<any> {
+  prompts(answers: any) {
     return [
       {
         type: 'input',
@@ -43,5 +41,7 @@ export const acr: Registry = {
 
   releaseTemplate(): string {
     return 'release.azurecr.yml';
-  }
+  },
+
+  async prepareRegistry() { return undefined; }
 }

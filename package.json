@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "chalk": "^2.1.0",
+    "hippo-js": "file:../hippo-client-node",
     "mkdirp": "^1.0.4",
     "shelljs": "^0.8.4",
     "yeoman-generator": "^2.0.1",
