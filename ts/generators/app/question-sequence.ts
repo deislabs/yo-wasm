@@ -14,7 +14,6 @@ export async function ask(questions: (Generator.Question<any> & Moarable)[], ask
     const keyedAnswer = await askfn(question);
     Object.assign(answers, keyedAnswer);
     const answer = keyedAnswer[question.name];
-    console.log(`answers is now: ${JSON.stringify(answers)}`);
     if (question.moar && question.moar.askIf(answer)) {
       const moarAnswers = await ask(question.moar.moarQuestions, askfn);
       Object.assign(answers, moarAnswers);
