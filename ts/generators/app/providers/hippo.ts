@@ -12,7 +12,7 @@ export const hippo: Registry = {
         type: 'input',
         name: 'hippoUrl',
         message: "What is the URL of your Hippo service?",
-        default: 'https://localhost:5001/',
+        default: 'https://hippos.rocks/',
       },
       {
         type: 'input',
