@@ -28,6 +28,17 @@ After you run the generator, it displays any language-specific instructions
 to get started - for examples, tools you need to have installed. The generated
 `README.md` may also contain information on compiling or running the project.
 
+### Setup and development servers
+
+Yeoman installs a hook that prevents generators from talking to Web services
+with self-signed certificates. If you are testing with a local or self-signed
+installation of an OCI registry, Hippo or Bindle, you will need to disable
+this hook before starting Yeoman:
+
+```
+GLOBAL_AGENT_FORCE_GLOBAL_AGENT=false yo wasm
+```
+
 ## Working on the generated project
 
 The generated projects contain configuration files for Visual Studio Code to help
@@ -44,7 +55,7 @@ _NOTE: These are not yet provided for the AssemblyScript template._
 ## Publishing a project
 
 The project contains a GitHub action (in `.github/workflows/release.yml`) that publishes
-your WASM module to an OCI registry.
+your WASM module to an OCI registry or to the Hippo platform.
 
 * It publishes a `canary` version whenever you push to `main`.
 * It publishes a versioned module whenever you create a tag from `main`
@@ -53,7 +64,9 @@ your WASM module to an OCI registry.
 _NOTE: `release.yml` watches the `main` branch.  If your repository uses the name
 `master` then you must change this in the workflow file._
 
-At the moment, the Yeoman generator only sets up publishing for
+### Publishing to OCI
+
+At the moment, the only pre-installed OCI registry is
 Azure Container Registry, but we'll expand this repertoire over time
 (and it should be reasonably easy to adapt the ACR steps to other registries).
 The publish workflow needs to know three things:
@@ -73,6 +86,14 @@ The publish workflow needs to know three things:
 _NOTE: during testing we sometimes see that GitHub workflows do not run on the initial
 commit, or if you tag the initial commit. It usually works - but you **may** need to
 push a change to `main` before the workflows will run._
+
+### Publishing to Hippo
+
+Hippo publishing configuration is similar to OCI configuration except that it needs:
+
+* The Hippo URL in `HIPPO_SERVICE_URL` (in `release.yml`)
+* The Bindle URL in `BINDLE_SERVER_URL` (in `release.yml`)
+* The Hippo credentials in `HIPPO_USERNAME` and `HIPPO_PASSWORD` (in repo secrets)
 
 ## Contributing
 
