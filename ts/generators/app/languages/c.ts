@@ -5,7 +5,7 @@ import { Language } from './language';
 import { Errorable, failed } from '../utils/errorable';
 import { Platform, shell } from '../utils/shell';
 
-const WASI_SDK_MAJOR = 11;
+const WASI_SDK_MAJOR = 12;
 const WASI_SDK_MINOR = 0;
 const TOOLS_PATH = '.tools';
 
