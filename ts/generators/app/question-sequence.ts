@@ -18,7 +18,6 @@ export async function ask(questions: (Generator.Question<any> & Moarable)[], ask
       const moarAnswers = await ask(question.moar.moarQuestions(answers), askfn, answers);
       Object.assign(answers, moarAnswers);
     }
-    console.log(`answers is now ${JSON.stringify(answers)}`);
   }
   return answers;
 }

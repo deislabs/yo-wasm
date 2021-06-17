@@ -102,7 +102,8 @@ export const hippo: Registry = {
       const { hippoUrl, hippoUsername, hippoPassword } = answers;
       const agent = new https.Agent({ rejectUnauthorized: false });
       const client = await HippoClient.new(hippoUrl, hippoUsername, hippoPassword, agent);
-      await client.createApplication(answers.moduleName, answers.moduleName);
+      const appId = await client.createApplication(answers.moduleName, answers.bindleId);
+      await client.createChannel(appId, "Development", { revisionRange: "*" });
       log(chalk.green('Setup complete'));
       return undefined;
     } catch (e) {
