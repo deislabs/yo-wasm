@@ -88,10 +88,10 @@ module.exports = class extends Generator {
     const answers = await ask(prompts, (q) => this.prompt(q));
 
     const languagePrompts = await languageSpecificPrompts(answers);
-    const languageAnswers = await this.prompt(languagePrompts);
+    const languageAnswers = await ask(languagePrompts, (q) => this.prompt(q), answers);
 
     const providerPrompts = providerSpecificPrompts(answers);
-    const providerAnswers = await ask(providerPrompts, (q) => this.prompt(q));
+    const providerAnswers = await ask(providerPrompts, (q) => this.prompt(q), answers);
 
     const answerConversions = simplify(answers);
 
@@ -237,12 +237,12 @@ function providerSpecificPrompts(answers: any): (Generator.Question<any> & Moara
   return p(answers);
 }
 
-async function languageSpecificPrompts(answers: any): Promise<Generator.Questions<any>> {
+async function languageSpecificPrompts(answers: any): Promise<(Generator.Question<any> & Moarable)[]> {
   const toolOffer = await languageProvider(answers.language).offerToInstallTools();
   const installationPrompts = toolOffer ?
     [
       {
-        type: 'confirm',
+        type: 'confirm' as const,
         name: 'installTools',
         message: `Would you like to install build tools (${toolOffer})?`,
         default: true,
@@ -262,6 +262,7 @@ function removeSuppressionExtension(path: string): string {
 function simplify(answers: any): any {
   return {
     wagi: (answers.moduleKind === PROJ_KIND_WAGI),
+    bindleId: (answers.bindleId || answers.moduleName),
   };
 }
 

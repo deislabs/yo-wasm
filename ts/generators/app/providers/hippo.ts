@@ -27,7 +27,13 @@ export const hippo: Registry = {
         default: true,
         moar: {
           askIf: (ans) => !!ans,
-          moarQuestions: [
+          moarQuestions: (ans) => [
+            {
+              type: 'input',
+              name: 'bindleId',
+              message: "What storage ID (bindle name) would you like for your Hippo app?",
+              default: bindleise(ans.authorName, ans.moduleName),
+            },
             {
               type: 'input',
               name: 'hippoUsername',
@@ -85,6 +91,10 @@ export const hippo: Registry = {
   },
 
   async prepareRegistry(answers: any, log: (line: string) => void): Promise<Error | undefined> {
+    if (!answers.hippoCreateApp) {
+      return;
+    }
+
     log('');
     log(chalk.green('Setting up your Hippo application...'));
 
@@ -101,4 +111,10 @@ export const hippo: Registry = {
       return e;
     }
   }
+}
+
+function bindleise(user: string, app: string): string {
+  const ns = user.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
+  const safeApp = app.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
+  return `${ns}/${safeApp}`;
 }
