@@ -12,13 +12,13 @@ export const hippo: Registry = {
         type: 'input',
         name: 'hippoUrl',
         message: "What is the URL of your Hippo service?",
-        default: 'https://hippos.rocks/',
+        default: process.env['HIPPO_SERVICE_URL'] || 'https://hippos.rocks/',
       },
       {
         type: 'input',
         name: 'serverUrl',
         message: "What is the URL of your Hippo's Bindle server?",
-        default: 'https://bindle.hippos.rocks/v1',
+        default: process.env['BINDLE_SERVER_URL'] || 'https://bindle.hippos.rocks/v1',
       },
       {
         type: 'confirm',
@@ -38,12 +38,14 @@ export const hippo: Registry = {
               type: 'input',
               name: 'hippoUsername',
               message: "Enter your Hippo user name (will become app owner)",
+              default: process.env['HIPPO_USERNAME'] || '',
             },
             {
               type: 'password',
               name: 'hippoPassword',
               mask: '*',
               message: "Enter your Hippo password",
+              default: process.env['HIPPO_PASSWORD'] || '',
             },
           ]
         },
