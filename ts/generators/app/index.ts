@@ -14,6 +14,7 @@ import { assemblyScript } from './languages/assembly-script';
 import { failed } from './utils/errorable';
 import { swift } from './languages/swift';
 import { FMT_CHALK, FMT_MARKDOWN } from './formatter';
+import { ask, Moarable } from './question-sequence';
 
 const REGISTRY_CHOICE_ACR = "Azure Container Registry";
 const REGISTRY_CHOICE_HIPPO = "Hippo";
@@ -37,7 +38,7 @@ module.exports = class extends Generator {
     const username = this.user.git.name() || process.env.USER || process.env.USERNAME;
     const appname = this.appname.replace(/ /g, '-');
 
-    const prompts: Generator.Questions<any> = [
+    const prompts: (Generator.Question<any> & Moarable)[] = [
       {
         type: 'input',
         name: 'moduleName',
@@ -84,13 +85,13 @@ module.exports = class extends Generator {
       }
     ];
 
-    const answers = await this.prompt(prompts);
+    const answers = await ask(prompts, (q) => this.prompt(q));
 
     const languagePrompts = await languageSpecificPrompts(answers);
-    const languageAnswers = await this.prompt(languagePrompts);
+    const languageAnswers = await ask(languagePrompts, (q) => this.prompt(q), answers);
 
     const providerPrompts = providerSpecificPrompts(answers);
-    const providerAnswers = await this.prompt(providerPrompts);
+    const providerAnswers = await ask(providerPrompts, (q) => this.prompt(q), answers);
 
     const answerConversions = simplify(answers);
 
@@ -159,9 +160,11 @@ module.exports = class extends Generator {
   async end() {
     const language = languageProvider(this.answers.language);
     const registry = provider(this.answers.registryProvider);
+    const errors = Array.of<string>();
 
     this.log('');
     this.log(chalk.green('Created project and GitHub workflows'));
+
     if (this.answers.installTools) {
       this.log('');
       this.log('Installing tools...');
@@ -169,13 +172,21 @@ module.exports = class extends Generator {
       if (failed(installResult)) {
         this.log(`${chalk.red('Tool installation failed!')} Install tools manually.`);
         this.log(`Error details: ${installResult.error[0]}`);
+        errors.push('* Error installing tools');
       } else {
         this.log('Installation complete');
       }
     }
+
+    const prepareError = await registry.prepareRegistry(this.answers, this.log);
+    if (prepareError) {
+      errors.push('* Error setting up publishing');
+    }
+
     logParagraph(this.log, chalk.yellow('Building'), language.instructions(FMT_CHALK));
     logParagraph(this.log, chalk.yellow('Dev releases'), registry.localInstructions(FMT_CHALK, this.answers));
     logParagraph(this.log, chalk.yellow('CI releases'), registry.workflowInstructions(FMT_CHALK, this.answers));
+    logParagraph(this.log, chalk.underline(chalk.red('There were errors during setup: see above for details')), errors);
     this.log('');
   }
 };
@@ -220,16 +231,18 @@ function languageProvider(language: string): Language {
   }
 }
 
-function providerSpecificPrompts(answers: any): any {
-  return provider(answers.registryProvider).prompts(answers);
+function providerSpecificPrompts(answers: any): (Generator.Question<any> & Moarable)[] {
+  const registry = provider(answers.registryProvider);
+  const p = registry.prompts;
+  return p(answers);
 }
 
-async function languageSpecificPrompts(answers: any): Promise<Generator.Questions<any>> {
+async function languageSpecificPrompts(answers: any): Promise<(Generator.Question<any> & Moarable)[]> {
   const toolOffer = await languageProvider(answers.language).offerToInstallTools();
   const installationPrompts = toolOffer ?
     [
       {
-        type: 'confirm',
+        type: 'confirm' as const,
         name: 'installTools',
         message: `Would you like to install build tools (${toolOffer})?`,
         default: true,
@@ -249,6 +262,7 @@ function removeSuppressionExtension(path: string): string {
 function simplify(answers: any): any {
   return {
     wagi: (answers.moduleKind === PROJ_KIND_WAGI),
+    bindleId: (answers.bindleId || answers.moduleName),
   };
 }
 

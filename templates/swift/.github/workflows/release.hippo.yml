@@ -8,6 +8,7 @@ on:
 
 env:
   BINDLE_SERVER_URL: <%= serverUrl %>
+  HIPPO_SERVICE_URL: <%= hippoUrl %>
 
 jobs:
   publish:
@@ -61,13 +62,19 @@ jobs:
     - name: Install hippofactory
       run: |
         mkdir -p tools/tmp
-        wget https://github.com/deislabs/hippofactory/releases/download/v0.3.0/hippofactory-v0.3.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippofactory.tar.gz
+        wget https://github.com/deislabs/hippofactory/releases/download/v0.4.0/hippofactory-v0.4.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippofactory.tar.gz
         tar xf ./tools/tmp/hippofactory.tar.gz -C ./tools
 
     - name: Publish bindle (tagged)
       if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        HIPPO_USERNAME: ${{ secrets.HIPPO_USERNAME }}
+        HIPPO_PASSWORD: ${{ secrets.HIPPO_PASSWORD }}
       run: ./tools/hippofactory . -v production -o message
 
     - name: Publish bindle (main)
       if: github.ref == 'refs/heads/main'
+      env:
+        HIPPO_USERNAME: ${{ secrets.HIPPO_USERNAME }}
+        HIPPO_PASSWORD: ${{ secrets.HIPPO_PASSWORD }}
       run: USER=canary ./tools/hippofactory . -o message
