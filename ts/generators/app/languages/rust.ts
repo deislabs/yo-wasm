@@ -1,5 +1,6 @@
 import { Formatter } from '../formatter';
-import { Errorable } from '../utils/errorable';
+import { Errorable, failed } from '../utils/errorable';
+import { shell } from '../utils/shell';
 import { Language } from './language';
 
 export const rust: Language = {
@@ -36,14 +37,31 @@ export const rust: Language = {
   },
 
   async offerToInstallTools(): Promise<string | undefined> {
-    return undefined;
+    if (await isRustWASIInstalled()) {
+      return undefined;
+    }
+    return "Rust WASI target";
   },
 
   async installTools(_projectDir: string): Promise<Errorable<null>> {
+    const sr = await shell.exec('rustup target add wasm32-wasi');
+    if (failed(sr)) {
+      return sr;
+    } else if (sr.result.code !== 0) {
+      return { succeeded: false, error: [`Error installing WASI target: ${sr.result.stderr}`] };
+    }
     return { succeeded: true, result: null };
   },
 
   augment(answers: any): any {
     return answers;
   }
+}
+
+async function isRustWASIInstalled(): Promise<boolean> {
+  const sr = await shell.exec('rustup target list --installed');
+  if (failed(sr) || sr.result.code !== 0) {
+    return false;
+  }
+  return sr.result.stdout.includes('wasm32-wasi');
 }
