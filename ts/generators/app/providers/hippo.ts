@@ -18,7 +18,7 @@ export const hippo: Registry = {
         type: 'input',
         name: 'serverUrl',
         message: "What is the URL of your Hippo's Bindle server?",
-        default: process.env['BINDLE_SERVER_URL'] || 'https://bindle.hippos.rocks/v1',
+        default: process.env['BINDLE_URL'] || 'https://bindle.hippos.rocks/v1',
       },
       {
         type: 'confirm',
