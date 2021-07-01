@@ -12,7 +12,7 @@ export const hippo: Registry = {
         type: 'input',
         name: 'hippoUrl',
         message: "What is the URL of your Hippo service?",
-        default: process.env['HIPPO_SERVICE_URL'] || 'https://hippos.rocks/',
+        default: process.env['HIPPO_URL'] || 'https://hippos.rocks/',
       },
       {
         type: 'input',
@@ -57,7 +57,7 @@ export const hippo: Registry = {
     return [
       'The release workflow depends on two variable and two secrets:',
       '',
-      `* ${fmt.ev('HIPPO_SERVICE_URL')} (defined in .github/workflows/release.yml): the`,
+      `* ${fmt.ev('HIPPO_URL')} (defined in .github/workflows/release.yml): the`,
       '  URL of the Hippo where you\'d like to',
       '  publish releases. We\'ve set this up for you.',
       `* ${fmt.ev('BINDLE_SERVICE_URL')} (defined in .github/workflows/release.yml): the`,
