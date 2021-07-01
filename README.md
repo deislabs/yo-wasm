@@ -91,7 +91,7 @@ push a change to `main` before the workflows will run._
 
 Hippo publishing configuration is similar to OCI configuration except that it needs:
 
-* The Hippo URL in `HIPPO_SERVICE_URL` (in `release.yml`)
+* The Hippo URL in `HIPPO_URL` (in `release.yml`)
 * The Bindle URL in `BINDLE_URL` (in `release.yml`)
 * The Hippo credentials in `HIPPO_USERNAME` and `HIPPO_PASSWORD` (in repo secrets)
 
