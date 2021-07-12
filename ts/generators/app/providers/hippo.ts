@@ -38,7 +38,7 @@ export const hippo: Registry = {
               type: 'input',
               name: 'domainName',
               message: "What domain name would you like for your Hippo app?",
-              default: process.env['APP_URL'] || ans.moduleName + '.hippos.rocks',
+              default: ans.moduleName + '.hippos.rocks',
             },
             {
               type: 'input',
