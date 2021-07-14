@@ -106,12 +106,18 @@ export const hippo: Registry = {
     log('');
     log(chalk.green('Setting up your Hippo application...'));
 
+    let user = process.env['USER'] ||
+      process.env["USERNAME"] ||
+      '';
+
     try {
       const { hippoUrl, hippoUsername, hippoPassword } = answers;
       const agent = new https.Agent({ rejectUnauthorized: false });
       const client = await HippoClient.new(hippoUrl, hippoUsername, hippoPassword, agent);
       const appId = await client.createApplication(answers.moduleName, answers.bindleId);
-      await client.createChannel(appId, "Development", answers.domainName, { revisionRange: "*" });
+      await client.createChannel(appId, "Latest Release", "latest." + answers.domainName, { revisionRange: "*" });
+      await client.createChannel(appId, "Canary", "canary." + answers.domainName, { revisionRange: "P:*-canary-*" });
+      await client.createChannel(appId, `Development: ${user}`, `${user}.` + answers.domainName, { revisionRange: `P:*-${user}-*` });
       log(chalk.green('Setup complete'));
       return undefined;
     } catch (e) {
