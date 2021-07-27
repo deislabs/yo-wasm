@@ -7,8 +7,8 @@ on:
       - "v*"
 
 env:
-  BINDLE_SERVER_URL: <%= serverUrl %>
-  HIPPO_SERVICE_URL: <%= hippoUrl %>
+  BINDLE_URL: <%= serverUrl %>
+  HIPPO_URL: <%= hippoUrl %>
 
 jobs:
   publish:
@@ -37,7 +37,7 @@ jobs:
     - name: Install hippofactory
       run: |
         mkdir -p tools/tmp
-        wget https://github.com/deislabs/hippofactory/releases/download/v0.4.0/hippofactory-v0.4.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippofactory.tar.gz
+        wget https://github.com/deislabs/hippofactory/releases/download/v0.5.0/hippofactory-v0.5.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippofactory.tar.gz
         tar xf ./tools/tmp/hippofactory.tar.gz -C ./tools
 
     - name: Publish bindle (tagged)
