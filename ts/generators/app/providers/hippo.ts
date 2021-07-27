@@ -86,8 +86,8 @@ export const hippo: Registry = {
 
   localInstructions(fmt: Formatter): ReadonlyArray<string> {
     return [
-      `* ${fmt.emph('You will need the Hippo uploader to publish dev builds.')} Download this from`,
-      '  https://github.com/deislabs/hippofactory/releases and install on your path.',
+      `* ${fmt.emph('You will need the Hippo CLI to publish dev builds.')} Download this from`,
+      '  https://github.com/deislabs/hippo-cli/releases and install on your path.',
     ]
   },
 
