@@ -38,7 +38,7 @@ export const hippo: Registry = {
               type: 'input',
               name: 'domainName',
               message: "What domain name would you like for your Hippo app?",
-              default: ans.moduleName + '.hippos.rocks',
+              default: `${ans.moduleName}.${sharedDomainOf(ans.hippoUrl)}`,
             },
             {
               type: 'input',
@@ -132,4 +132,16 @@ function bindleise(user: string, app: string): string {
   const ns = user.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
   const safeApp = app.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
   return `${ns}/${safeApp}`;
+}
+
+function sharedDomainOf(url: string): string {
+  // motivation:
+  // hippos.rocks -> hippos.rocks
+  // hippo.foo.com -> foo.com
+  // bar.foo.com -> foo.com
+  if (url.split('.').length <= 2) {
+    return url;
+  }
+  const subdomainParse = url.indexOf('.');
+  return url.substr(subdomainParse + 1);
 }
