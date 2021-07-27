@@ -1,4 +1,5 @@
 import * as https from 'https';
+import { URL } from 'url';
 import chalk from "chalk";
 import { HippoClient } from "hippo-js";
 
@@ -136,12 +137,17 @@ function bindleise(user: string, app: string): string {
 
 function sharedDomainOf(url: string): string {
   // motivation:
-  // hippos.rocks -> hippos.rocks
-  // hippo.foo.com -> foo.com
+  // https://hippos.rocks -> hippos.rocks
+  // http://hippo.foo.com/ -> foo.com
   // bar.foo.com -> foo.com
-  if (url.split('.').length <= 2) {
-    return url;
+  try {
+    const hostname = (new URL(url)).hostname;
+    if (hostname.split('.').length <= 2) {
+      return hostname;
+    }
+    const subdomainParse = hostname.indexOf('.');
+    return hostname.substr(subdomainParse + 1);
+  } catch {
+    return 'hippos.rocks';
   }
-  const subdomainParse = url.indexOf('.');
-  return url.substr(subdomainParse + 1);
 }
