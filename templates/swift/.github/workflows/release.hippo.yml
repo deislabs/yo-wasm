@@ -70,11 +70,11 @@ jobs:
       env:
         HIPPO_USERNAME: ${{ secrets.HIPPO_USERNAME }}
         HIPPO_PASSWORD: ${{ secrets.HIPPO_PASSWORD }}
-      run: ./tools/hippo . -v production -o message
+      run: ./tools/hippo push . -v production -o message
 
     - name: Publish bindle (main)
       if: github.ref == 'refs/heads/main'
       env:
         HIPPO_USERNAME: ${{ secrets.HIPPO_USERNAME }}
         HIPPO_PASSWORD: ${{ secrets.HIPPO_PASSWORD }}
-      run: USER=canary ./tools/hippo . -o message
+      run: USER=canary ./tools/hippo push . -o message
