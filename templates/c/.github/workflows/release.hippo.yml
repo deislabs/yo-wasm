@@ -42,7 +42,7 @@ jobs:
     - name: Build release
       run: make WASI_SDK=wasi-sdk-${{ matrix.wasi_sdk_version.major }}.${{ matrix.wasi_sdk_version.minor }}
 
-    - name: Install hippo
+    - name: Install Hippo CLI
       run: |
         mkdir -p tools/tmp
         wget https://github.com/deislabs/hippo-cli/releases/download/v0.6.0/hippo-v0.6.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippo.tar.gz

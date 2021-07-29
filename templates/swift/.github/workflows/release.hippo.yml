@@ -59,7 +59,7 @@ jobs:
     - name: Build release
       run: SWIFTC=/usr/bin/swift make build
 
-    - name: Install hippo
+    - name: Install Hippo CLI
       run: |
         mkdir -p tools/tmp
         wget https://github.com/deislabs/hippo-cli/releases/download/v0.6.0/hippo-v0.6.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippo.tar.gz
