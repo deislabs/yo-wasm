@@ -18,8 +18,8 @@
           {
             "label": "#OPT:Hippo# Hippo: Publish Development Build",
             "type": "shell",
-            "command": "hippofactory",
-            "args": ["."]
+            "command": "hippo",
+            "args": ["push", "."]
           }
     ]
 }
