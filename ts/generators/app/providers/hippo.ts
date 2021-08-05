@@ -67,7 +67,7 @@ export const hippo: Registry = {
       `* ${fmt.ev('HIPPO_URL')} (defined in .github/workflows/release.yml): the`,
       '  URL of the Hippo where you\'d like to',
       '  publish releases. We\'ve set this up for you.',
-      `* ${fmt.ev('BINDLE_SERVICE_URL')} (defined in .github/workflows/release.yml): the`,
+      `* ${fmt.ev('BINDLE_URL')} (defined in .github/workflows/release.yml): the`,
       '  URL of the Bindle server where your Hippo server',
       '  gets modules from. We\'ve set this up for you.',
       `* ${fmt.ev('HIPPO_USERNAME')} (secret you need to create in GitHub): the ID`,
