@@ -37,7 +37,7 @@ jobs:
     - name: Install Hippo CLI
       run: |
         mkdir -p tools/tmp
-        wget https://github.com/deislabs/hippo-cli/releases/download/v0.6.0/hippo-v0.6.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippo.tar.gz
+        wget https://github.com/deislabs/hippo-cli/releases/download/v0.7.0/hippo-v0.7.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippo.tar.gz
         tar xf ./tools/tmp/hippo.tar.gz -C ./tools
 
     - name: Publish bindle (tagged)
