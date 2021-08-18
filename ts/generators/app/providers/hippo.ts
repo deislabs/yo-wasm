@@ -13,13 +13,13 @@ export const hippo: Registry = {
         type: 'input',
         name: 'hippoUrl',
         message: "What is the URL of your Hippo service?",
-        default: process.env['HIPPO_URL'] || 'https://hippos.rocks/',
+        default: process.env['HIPPO_URL'] || 'https://hippo.hippofactory.io/',
       },
       {
         type: 'input',
         name: 'serverUrl',
         message: "What is the URL of your Hippo's Bindle server?",
-        default: process.env['BINDLE_URL'] || 'https://bindle.hippos.rocks/v1',
+        default: process.env['BINDLE_URL'] || 'https://bindle.hippofactory.io/v1',
       },
       {
         type: 'confirm',
@@ -137,7 +137,7 @@ function bindleise(user: string, app: string): string {
 
 function sharedDomainOf(url: string): string {
   // motivation:
-  // https://hippos.rocks -> hippos.rocks
+  // https://hippofactory.io -> hippofactory.io
   // http://hippo.foo.com/ -> foo.com
   // bar.foo.com -> foo.com
   try {
@@ -148,6 +148,6 @@ function sharedDomainOf(url: string): string {
     const subdomainParse = hostname.indexOf('.');
     return hostname.substr(subdomainParse + 1);
   } catch {
-    return 'hippos.rocks';
+    return 'hippofactory.io';
   }
 }
