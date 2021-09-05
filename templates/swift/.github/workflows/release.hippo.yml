@@ -70,6 +70,8 @@ jobs:
       env:
         HIPPO_USERNAME: ${{ secrets.HIPPO_USERNAME }}
         HIPPO_PASSWORD: ${{ secrets.HIPPO_PASSWORD }}
+        BINDLE_USERNAME: ${{ secrets.BINDLE_USERNAME }}
+        BINDLE_PASSWORD: ${{ secrets.BINDLE_PASSWORD }}
       run: ./tools/hippo push . -v production -o message
 
     - name: Publish bindle (main)
@@ -77,4 +79,6 @@ jobs:
       env:
         HIPPO_USERNAME: ${{ secrets.HIPPO_USERNAME }}
         HIPPO_PASSWORD: ${{ secrets.HIPPO_PASSWORD }}
+        BINDLE_USERNAME: ${{ secrets.BINDLE_USERNAME }}
+        BINDLE_PASSWORD: ${{ secrets.BINDLE_PASSWORD }}
       run: USER=canary ./tools/hippo push . -o message
