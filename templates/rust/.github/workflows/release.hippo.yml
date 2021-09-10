@@ -37,7 +37,7 @@ jobs:
     - name: Install Hippo CLI
       run: |
         mkdir -p tools/tmp
-        wget https://github.com/deislabs/hippo-cli/releases/download/v0.7.0/hippo-v0.7.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippo.tar.gz
+        wget https://github.com/deislabs/hippo-cli/releases/download/v0.9.0/hippo-v0.9.0-linux-amd64.tar.gz -q -O ./tools/tmp/hippo.tar.gz
         tar xf ./tools/tmp/hippo.tar.gz -C ./tools
 
     - name: Publish bindle (tagged)
@@ -45,6 +45,8 @@ jobs:
       env:
         HIPPO_USERNAME: ${{ secrets.HIPPO_USERNAME }}
         HIPPO_PASSWORD: ${{ secrets.HIPPO_PASSWORD }}
+        BINDLE_USERNAME: ${{ secrets.BINDLE_USERNAME }}
+        BINDLE_PASSWORD: ${{ secrets.BINDLE_PASSWORD }}
       run: ./tools/hippo push . -v production -o message
 
     - name: Publish bindle (main)
@@ -52,4 +54,6 @@ jobs:
       env:
         HIPPO_USERNAME: ${{ secrets.HIPPO_USERNAME }}
         HIPPO_PASSWORD: ${{ secrets.HIPPO_PASSWORD }}
+        BINDLE_USERNAME: ${{ secrets.BINDLE_USERNAME }}
+        BINDLE_PASSWORD: ${{ secrets.BINDLE_PASSWORD }}
       run: USER=canary ./tools/hippo push . -o message
