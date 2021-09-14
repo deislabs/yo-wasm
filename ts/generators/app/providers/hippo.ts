@@ -114,18 +114,32 @@ export const hippo: Registry = {
     try {
       const { hippoUrl, hippoUsername, hippoPassword } = answers;
       const agent = new https.Agent({ rejectUnauthorized: false });
-      const client = await HippoClient.new(hippoUrl, hippoUsername, hippoPassword, agent);
-      const appId = await client.createApplication(answers.moduleName, answers.bindleId);
-      await client.createChannel(appId, "Latest Release", "latest." + answers.domainName, { revisionRange: "*" });
-      await client.createChannel(appId, "Canary", "canary." + answers.domainName, { revisionRange: "P:*-canary-*" });
-      await client.createChannel(appId, `Development: ${user}`, `${user}.` + answers.domainName, { revisionRange: `P:*-${user}-*` });
+      const client = await withErrorContext("Login failed", () =>
+        HippoClient.new(hippoUrl, hippoUsername, hippoPassword, agent)
+      );
+      const appId = await withErrorContext("Application creation failed", () =>
+        client.createApplication(answers.moduleName, answers.bindleId)
+      );
+      await withErrorContext("Channel creation failed", async () => {
+        await client.createChannel(appId, "Latest Release", "latest." + answers.domainName, { revisionRange: "*" });
+        await client.createChannel(appId, "Canary", "canary." + answers.domainName, { revisionRange: "P:*-canary-*" });
+        await client.createChannel(appId, `Development: ${user}`, `${user}.` + answers.domainName, { revisionRange: `P:*-${user}-*` });
+      });
       log(chalk.green('Setup complete'));
       return undefined;
     } catch (e) {
       log(`${chalk.red('Setup failed!')} You will need to create the Hippo app manually.`);
       log(`The error was: ${e}`);
-      return e;
+      return e as Error;
     }
+  }
+}
+
+async function withErrorContext<T>(context: string, f: () => Promise<T>): Promise<T> {
+  try {
+    return await f();
+  } catch (e) {
+    throw new Error(`${context}: ${e}`);
   }
 }
 
