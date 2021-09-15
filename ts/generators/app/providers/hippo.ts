@@ -5,6 +5,7 @@ import { HippoClient } from "hippo-js";
 
 import { Registry } from "./registry";
 import { Formatter } from '../formatter';
+import { validateUrl } from '../utils/url';
 
 export const hippo: Registry = {
   prompts() {
@@ -113,6 +114,7 @@ export const hippo: Registry = {
 
     try {
       const { hippoUrl, hippoUsername, hippoPassword } = answers;
+      validateUrl(hippoUrl);
       const agent = new https.Agent({ rejectUnauthorized: false });
       const client = await withErrorContext("Login failed", () =>
         HippoClient.new(hippoUrl, hippoUsername, hippoPassword, agent)
