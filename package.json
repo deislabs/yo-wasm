@@ -1,6 +1,6 @@
 {
   "name": "generator-wasm",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "preview": true,
   "description": "Publish programs as WASM modules",
   "homepage": "https://github.com/deislabs/yo-wasm",
