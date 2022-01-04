@@ -5,6 +5,7 @@ A WASM hello-world written in Go and compiled into WASM via TinyGo
 You will need:
 * Go (v1.16 or higher): https://golang.org/doc/install
 * TinyGo: https://tinygo.org/getting-started/install
+* Make: https://www.gnu.org/software/make/"
 * wasmtime: `curl https://wasmtime.dev/install.sh -sSf | bash`
 
 To init: `make init`

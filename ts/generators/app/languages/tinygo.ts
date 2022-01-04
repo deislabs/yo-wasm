@@ -8,6 +8,7 @@ export const tinygo: Language = {
       "You'll need the following to build and run this project locally:",
       "* TinyGo: https://tinygo.org/getting-started/install/",
       `* Go (v1.14+): https://golang.org/doc/install`,
+      "* Make: https://www.gnu.org/software/make/",
       `* wasmtime: ${fmt.cmd('curl https://wasmtime.dev/install.sh -sSf | bash')}`,
       '',
       "Next steps:",
