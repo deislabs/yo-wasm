@@ -1,21 +1,20 @@
-import { default as chalk } from 'chalk';
-
+import { Formatter } from '../formatter';
 import { Errorable } from '../utils/errorable';
 import { Language } from './language';
 
 export const tinygo: Language = {
-  instructions(): ReadonlyArray<string> {
+  instructions(fmt: Formatter): ReadonlyArray<string> {
     return [
       "You'll need the following to build and run this project locally:",
       "* TinyGo: https://tinygo.org/getting-started/install/",
       `* Go (v1.14+): https://golang.org/doc/install`,
-      `* wasmtime: ${chalk.yellow('curl https://wasmtime.dev/install.sh -sSf | bash')}`,
+      `* wasmtime: ${fmt.cmd('curl https://wasmtime.dev/install.sh -sSf | bash')}`,
       '',
       "Next steps:",
-      `* Initialize your Go project using the VS Code ${chalk.yellow('TinyGo: Init')} task or via the Makefile ${chalk.yellow('make init')} target.`,
-      `* Test using the VS Code ${chalk.yellow('TinyGo: Test')} task or via the Makefile ${chalk.yellow('make test')} target.`,
-      `* Build using the VS Code ${chalk.yellow('TinyGo: Build WASM')} task or via the Makefile ${chalk.yellow('make build')} target.`,
-      `* Run using the VS Code ${chalk.yellow('TinyGo: Debug WASM')} task or via the Makefile ${chalk.yellow('make run')} target.`,
+      `* Initialize your Go project using the VS Code ${fmt.instr('TinyGo: Init')} task or via the Makefile ${fmt.cmd('make init')} target.`,
+      `* Test using the VS Code ${fmt.instr('TinyGo: Test')} task or via the Makefile ${fmt.cmd('make test')} target.`,
+      `* Build using the VS Code ${fmt.instr('TinyGo: Build WASM')} task or via the Makefile ${fmt.cmd('make build')} target.`,
+      `* Run using the VS Code ${fmt.instr('TinyGo: Debug WASM')} task or via the Makefile ${fmt.cmd('make run')} target.`,
     ];
   },
 

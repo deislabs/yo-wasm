@@ -8,7 +8,7 @@ You will need:
 * wasmtime: `curl https://wasmtime.dev/install.sh -sSf | bash`
 
 To init: `make init`
-* Just needs running once, this sets up Go module for this project
+* Just needs running once, this sets up Go modules for this project
 
 To test:
 * VS Code: `Run Task > TinyGo: Test`
