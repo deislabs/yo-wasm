@@ -1,0 +1,8 @@
+[bindle]
+name = "<%= bindleId %>"
+version = "0.1.0"
+authors = ["<%= authorName %>"]
+
+[[handler]]
+route = "/"
+name = "<%= moduleName %>.wasm"
