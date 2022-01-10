@@ -15,6 +15,15 @@
             "label": "TinyGo: Build WASM",
             "type": "shell",
             "command": "make build"
-        }
+        },
+        {
+        "label": "#OPT:Hippo# Hippo: Publish Development Build",
+        "type": "shell",
+        "command": "hippo",
+        "args": [
+          "push",
+          "."
+        ]
+      }
     ]
 }
