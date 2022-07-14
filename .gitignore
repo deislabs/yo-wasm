@@ -2,3 +2,5 @@ node_modules
 coverage
 generators/**/*
 *.tgz
+bin/
+obj/

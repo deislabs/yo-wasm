@@ -14,6 +14,7 @@ import { assemblyScript } from './languages/assembly-script';
 import { failed } from './utils/errorable';
 import { swift } from './languages/swift';
 import { tinygo } from './languages/tinygo';
+import { csharp } from './languages/csharp';
 import { FMT_CHALK, FMT_MARKDOWN } from './formatter';
 import { ask, Moarable } from './question-sequence';
 
@@ -70,7 +71,8 @@ module.exports = class extends Generator {
           'C',
           'Rust',
           'Swift',
-          'TinyGo'
+          'TinyGo',
+          'C#'
         ],
         default: 'Rust'
       },
@@ -230,6 +232,8 @@ function languageProvider(language: string): Language {
       return swift;
     case 'TinyGo':
       return tinygo;
+    case 'C#':
+      return csharp;
     default:
       throw new Error("You didn't choose a language");
   }
