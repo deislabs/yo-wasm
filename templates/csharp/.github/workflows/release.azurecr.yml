@@ -38,8 +38,8 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
-        name: WasmProject.wasm
-        path: bin/Release/net7.0/WasmProject.wasm
+        name: <%= moduleName %>.wasm
+        path: bin/Release/net7.0/<%= moduleName %>.wasm
 
   publish:
     name: Push released module to OCI registry
@@ -63,11 +63,11 @@ jobs:
     - name: Download release assets
       uses: actions/download-artifact@v1
       with:
-        name: WasmProject.wasm
+        name: <%= moduleName %>.wasm
         path: ./assets
 
     - name: Log into registry
       run: az acr login -n ${ACR_NAME} -u ${{ secrets.ACR_SP_ID }} -p ${{ secrets.ACR_SP_PASSWORD }}
 
     - name: Publish to registry
-      run: ./tools/wasm-to-oci push ./assets/WasmProject.wasm ${ACR_NAME}.azurecr.io/<%= moduleName %>:${RELEASE_VERSION}
+      run: ./tools/wasm-to-oci push ./assets/<%= moduleName %>.wasm ${ACR_NAME}.azurecr.io/<%= moduleName %>:${RELEASE_VERSION}

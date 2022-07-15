@@ -29,7 +29,7 @@ export const csharp: Language = {
       '.vscode/settings.json',
       '.vscode/tasks.json',
       'Program.cs',
-      'WasmProject.csproj'
+      'csharp-wasm.csproj'
     ];
   },
 

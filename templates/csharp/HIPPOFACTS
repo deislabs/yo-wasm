@@ -5,4 +5,4 @@ authors = ["<%= authorName %>"]
 
 [[handler]]
 route = "/"
-name = "bin/Debug/net7.0/WasmProject.wasm"
+name = "bin/Debug/net7.0/<%= moduleName %>.wasm"

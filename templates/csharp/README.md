@@ -13,4 +13,4 @@ To build:
 To run:
 * VS Code: `Run Task > run`
 * Command line: `dotnet run`
-* Command line: `wasmtime bin/Debug/net7.0/WasmProject.wasm`
+* Command line: `wasmtime bin/Debug/net7.0/<%= moduleName %>.wasm`

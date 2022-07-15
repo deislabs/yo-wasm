@@ -7,7 +7,7 @@
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/WasmProject.csproj",
+        "${workspaceFolder}/<%= moduleName %>.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -28,7 +28,7 @@
       "type": "process",
       "args": [
         "publish",
-        "${workspaceFolder}/WasmProject.csproj",
+        "${workspaceFolder}/<%= moduleName %>.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -42,7 +42,7 @@
         "watch",
         "run",
         "--project",
-        "${workspaceFolder}/WasmProject.csproj"
+        "${workspaceFolder}/<%= moduleName %>.csproj"
       ],
       "problemMatcher": "$msCompile"
     }
