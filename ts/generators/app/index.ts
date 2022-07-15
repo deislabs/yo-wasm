@@ -113,7 +113,7 @@ module.exports = class extends Generator {
     for (const path of language.templateFiles()) {
       this.fs.copyTpl(
         this.templatePath(fspath.join(templateFolder, path)),
-        removeSuppressionExtension(this.destinationPath(path)),
+        cleanupTemplateFiles(this.destinationPath(path), this.answers),
         templateValues
       );
     }
@@ -128,7 +128,7 @@ module.exports = class extends Generator {
     for (const path of registry.languageFiles()) {
       this.fs.copyTpl(
         this.templatePath(fspath.join(templateFolder, path)),
-        removeSuppressionExtension(this.destinationPath(path)),
+        cleanupTemplateFiles(this.destinationPath(path), this.answers),
         templateValues
       );
     }
@@ -260,9 +260,14 @@ async function languageSpecificPrompts(answers: any): Promise<(Generator.Questio
   return installationPrompts;
 }
 
-function removeSuppressionExtension(path: string): string {
+function cleanupTemplateFiles(path: string, answers: any): string {
   if (fspath.extname(path) === '.removeext') {
     return path.substring(0, path.length - '.removeext'.length);
+  }
+  // Perform a project filename change for c# projects.
+  // This will change the templated .csproj file name to the user-provided module name.
+  if ((path.includes('csharp-wasm'))) {
+    return path.replace('csharp-wasm', answers.moduleName);
   }
   return path;
 }
