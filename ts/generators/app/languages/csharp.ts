@@ -9,6 +9,8 @@ export const csharp: Language = {
       "* .NET 7 - Preview 4 or newer: `https://dotnet.microsoft.com/en-us/download/dotnet/7.0`",
       `* wasmtime: ${fmt.cmd('curl https://wasmtime.dev/install.sh -sSf | bash')}`,
       '',
+      "Optionally, you can run this project in the provided Dev Container which already includes .NET 7 and Wasmtime.",
+      '',
       `Build using VS Code ${fmt.instr('build')} task or ${fmt.cmd('dotnet build')}.`,
       `Run using VS Code ${fmt.instr('run')} task or ${fmt.cmd('dotnet run')}.`,
     ];
